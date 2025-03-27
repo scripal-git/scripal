@@ -1,0 +1,103 @@
+JSON parser:
+element, start, stop, exclude in 
+
+JSON key
+
+'JSONkey', {, }, '{','}'
+
+JSON value
+
+'JSONvalue', :, , '"','"'
+
+
+set(JSON)
+
+#KEY('test') #KEY ('sub')
+
+
+config name
+{ element: key
+  detect: match
+  begin: match
+  end: match
+}  
+
+
+&JSON_UP(3)                          // move up three elements
+&JSON_START()                        // move up to start of elemet
+&JSON_KEY('TEST')                    // 
+find &JSON_KEY('TEST', 'ELEMENT')
+find &JSON_VALUE('TEST', 'ANY')      // find JSON value anywhere
+find &JSON_VALUE('TEST', 'ELEMENT')  // find JSON value in current element
+
+JSON UP 
+
+
+
+all text based, copy, write, delete text chunks, everything is an operator or reference 
+
+internal VM
+
+cmd opd1 opd2 ....
+
+
+VM ops
+
+input   src           get from mouse, keyboard...
+print                 print on screen
+copy    src dst 
+move    src dst       move file, folder...  
+delete  src           delete database, file, folder...
+match   
+
+save "ami" as #./text.de
+save #./text.de as #./text2.de
+
+save "ami" in '#./text.de'[20]
+insert "ami" in #./text.de[20]
+
+use #./text.de as textfile
+use 1 as var1
+
+save var1 in '#./text.de'[20]
+
+***************************************
+
+entities
+
+uri                  &http://test.de/
+host                 #test.de,  #72.23.34.12
+date                 ^01.01.1999 
+numbers              1, 4.5, -4e20
+text                "apes", "line1\n line2"  
+file                ./test/file.txt
+folder              / ,  /home/check/
+database            %db1
+database entry      %db1/test/all  
+database folder     %db1/test/
+reference           a, text
+
+host.database.entry #test.de/%db1/test/all  
+
+positions  [8] , [8,10]  
+access     /   sub entity
+
+create /test in /home/check
+create /test in %db1
+create /2152 in %db1/test
+
+****  langage  ******
+
+store a in db
+ 
+
+calc( 1 + a * 7 )
+
+a = "test"
+
+./test/file.txt = "test"
+
+replace a[8, 8] with "t"
+send "t" to #72.23.34.12
+
+

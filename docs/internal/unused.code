@@ -1,0 +1,1380 @@
+    std::string s1 = "12345678901234567890ä<";
+    std::string s2 = "1234567890123456789ää";
+    std::cout << jaroDistance(s1, s2)<< "\n";
+    std::cout << jaroWinklerDistance(s1, s2)<< "\n";
+    exit(0);
+ 
+std::string pdfWhite = "\x9\xa\xc\xd\x20"; 
+
+// ****************************************************************************
+// test for keyword in PDF with whitespace as terminator
+// aLine - extracted line
+// aBlock - keyword to look for
+// return - start of keyword or nPos
+// ***************************************************************************
+std::size_t testBlockPDF(const std::string &aLine, const std::string &aBlock) {
+  std::size_t pos;
+  pos = aLine.find(aBlock);
+  if (pos == nPos)
+    return(pos);
+
+  if (pos + aBlock.size() >= aLine.size())
+    return(pos);
+
+  if (aLine.find_first_of(pdfWhite, pos) == pos + aBlock.size())
+    return(pos);
+
+  return(nPos);
+}  
+
+// ****************************************************************************
+// read hexadecimal value in PDF format <>
+// aLine - extracted line
+// aStartPos - opening '<'
+// aValue - value read
+// return - end of value or nPos
+// ***************************************************************************
+std::size_t readHexPDF(const std::string &aLine, std::size_t aStartPos, char32_t &aValue ) {
+  std::size_t pos = aLine.find('>', aStartPos);
+  if (pos == nPos)
+    return(nPos);
+  aValue = std::stoul(aLine.substr(aStartPos + 1 , pos - aStartPos -1), nullptr, 16);   
+  return(pos); 
+}  
+
+ 
+ 
+ 
+ // ****************************************************************************
+// decode PDF files
+// aData  - file with decoded streams  
+// return - file content in UTF-8
+// ****************************************************************************
+std::string processPDF(const std::string &aData) {
+  std::string line, result;
+  std::istringstream stream(aData);
+  std::vector<std::vector<char32_t>> chars;
+  std::array<char32_t, 0xff> maps;
+  char32_t map, curChar;
+  std::size_t pos;
+  bool textBlock = false, mapDef = false;
+  
+  while (!stream.eof()) {
+    getline(stream, line);
+
+    if ((pos = testBlockPDF(line, "BT")) != nPos) {
+      // begin textblock
+      textBlock = true;
+    } else if ((pos = testBlockPDF(line, "ET")) != nPos) {
+      // begin textblock
+      textBlock = false;
+    } else if ((pos = testBlockPDF(line, "beginbfchar")) != nPos) {
+      // begin char mapping
+      mapDef = true;
+      std::fill_n(maps.begin(), 0xff, 0);
+    } else if ((pos = testBlockPDF(line, "endbfchar")) != nPos) {
+      // end char mapping
+      if ((chars.size() > 0) && (maps.size() > 0)) {
+        for (std::size_t index = 0; index < chars.size(); ++index) {
+          if (chars[index][0] == 0x0)
+            // special char
+            result += toString(chars[index][1]);
+          else 
+            // char mapping
+            result += toString(maps[chars[index][0]]);
+        }
+        
+      }
+      mapDef = false;
+    } else {
+      if (textBlock) {
+        if (((testBlockPDF(line, "TD")) != nPos) || ((testBlockPDF(line, "Td")) != nPos)) {
+          // new line
+          chars.push_back({0, '\n'});
+        }
+
+        if ((pos = testBlockPDF(line,"Tj") != nPos)) { 
+          // Tj string
+          std::cout << line << "\n";
+          pos = line.rfind("(");
+          if (pos != nPos) { 
+            // true string
+            std::size_t endPos = line.find(")", pos);
+            if (endPos != nPos) {
+              // direct chars or maps? 
+              result += line.substr(pos + 1, endPos - pos - 1);
+              
+            }
+            continue;  
+          }     
+
+          pos = line.rfind("<");
+          if (pos != nPos) { 
+            // array
+            ++pos;
+            while (pos < line.size()) {
+              if (line[pos] == '>')
+                break;
+              map = std::stoul(line.substr(pos , 2), nullptr, 16);
+              chars.push_back({map, 0});
+              pos += 2;
+            }; 
+            continue;  
+          }     
+        } else if ((pos = testBlockPDF(line,"TJ") != nPos)) {
+          // TJ array Char Array
+          pos = line.rfind("[<");
+          if (pos == nPos)
+            continue;
+          pos +=2;  
+          while (pos < line.size()) {
+            if (line[pos] == ']')
+              break; 
+            map = std::stoul(line.substr(pos , 2), nullptr, 16);
+            chars.push_back({map, 0});
+            pos += 2;
+            if (line[pos] == '>') {
+              pos = line.find('<', pos);
+              if (pos == nPos)
+                break;
+              ++pos;
+            }   
+          }  
+        }
+      } else if (mapDef) {
+        // character definition
+        if (line[0] == '<') {
+          pos = readHexPDF(line,0, map);
+          if (pos == nPos)
+            continue;
+            
+          pos = line.find('<', 1);
+          pos = readHexPDF(line,pos, curChar);
+          if (pos != nPos) {
+            if (map <= 255)
+              maps[map] = curChar;
+          } 
+          
+        } 
+      }
+    } 
+
+  }
+  
+  return(result);
+}
+
+// ****************************************************************************
+// decode PDF files
+// aFile  - path to file 
+// return - file content in UTF-8
+// ****************************************************************************
+std::string decodeFilePDF(const std::string &aFile) {
+  std::string buffer;
+  std::string data, result;
+  readFromFile(aFile, buffer);
+  std::size_t streamStart = 0;
+  std::size_t streamEnd   = 0;
+  std::size_t streamPos;
+
+  while (streamStart != nPos) { 
+    streamStart = buffer.find("stream", streamStart);
+    streamEnd = buffer.find("endstream", streamStart);
+    if (streamStart == nPos) 
+      break;
+    streamPos = streamEnd + 9;
+    
+    bool streamZipped = false;
+    if (buffer.rfind("FlateDecode", streamStart) > streamStart - 30) 
+      streamZipped = true;
+    
+    if ((!streamZipped) || (streamEnd <= streamStart)) { 
+      streamStart = streamPos;
+      continue;
+    };
+
+  	streamStart += 6;
+
+    if (buffer[streamStart]==0x0d && buffer[streamStart+1]==0x0a) 
+      streamStart += 2;
+    else if (buffer[streamStart]==0x0a) 
+      streamStart++;
+
+    if (buffer[streamEnd-2]==0x0d && buffer[streamEnd-1]==0x0a) 
+      streamEnd -= 2;
+    else if (buffer[streamEnd-1]==0x0a) 
+      streamEnd--;
+
+    std::istringstream input(buffer.substr(streamStart, streamEnd - streamStart + 1));
+    Poco::InflatingStreamBuf stream(input, Poco::InflatingStreamBuf::STREAM_ZLIB);
+    try {
+      while ( stream.snextc() != EOF ) {
+        char ch = stream.sgetc();
+        data.push_back(ch);
+      };
+    } catch (std::exception &aExc) {
+      // image or alien encoding
+    }
+
+    streamStart = streamPos;
+    if (streamStart >= buffer.size())
+      break;
+ }; 
+
+ //std::cout << data << "\n";
+ if (data.size() != 0) {
+   result = processPDF(data);
+ }
+  return(result); 
+};  
+
+/*
+    std::string source = "match find('test'); end; loop;";
+  TFScripal* obj;
+  
+  bool dirRecursive = true;
+  std::string dirPath = "./test";
+  std::string dirExtension = "txt";
+  
+  std::cout << "block match: \n\n";
+  obj = new TFScripal("Test: Look for the word test in all these these tests.", 0.1, MATCH_BLOCK);
+  fileSearch(*obj, dirPath, dirExtension, dirRecursive);
+  std::cout << resultsToJson(encoding) << "\n";
+  delete obj;
+
+  exit(0);
+
+// decode docx
+  std::ifstream inp(aFile, std::ios::binary);
+  poco_assert (inp); 
+  Poco::Zip::ZipArchive arch(inp);
+  Poco::Zip::ZipArchive::FileHeaders::const_iterator it = arch.findHeader("word/document.xml");
+  poco_assert (it != arch.headerEnd());
+  inp.clear();
+  Poco::Zip::ZipInputStream zipin(inp, it->second);
+ // std::ostringstream out(std::ios::binary);
+  std::ofstream out;
+  out.open ("document.xml");
+  Poco::StreamCopier::copyStream(zipin, out);
+  
+/*  
+  std::ofstream myfile;
+  myfile.open ("document.xml");
+  myfile << out;
+    myfile.close();
+*/  return("document.xml");
+
+// ****************************************************************************
+// search for files where source matches
+// aPath         - path to search in
+// aSource       - srcipal source 
+// aDirExtension - file types to search for in directories (default: "*")
+// aRecursive    - if true, search all subdirectories
+// return - error string or empty string
+// ****************************************************************************
+std::string fileSearchSource(const std::string &aPath, const std::string &aSource, const std::string &aDirExtension, bool aRecursive) {
+  TFScripal obj(aSource);
+  
+  if (obj.error != "")
+    return(obj.error);
+  
+  TFFileIterate files(aPath, aDirExtension, aRecursive);
+  if (files.error)
+    return("path " + aPath + " not found or no permission");
+  
+  results.init(MATCH_SOURCE);
+   
+  while (files.error == 0) {
+    files.iterate();
+    if (files.error) 
+      return("");
+
+    std::string fileName = files.entry->path().string();
+    if (obj.matchFile(fileName, ENC_UTF8)) {
+
+      results.matchType = obj.results.matchType;
+      results.push_back(obj.results);
+    }
+  };
+  
+  return("");
+};
+
+// ****************************************************************************
+// search for files with nearest match
+// aPath         - path to search in
+// aSource       - source to compare with
+// aMax          - maximum distance tomatch
+// aDirExtension - file types to search for in directories (default: "*")
+// aRecursive    - if true, serach all subdirectories
+// return - error string or empty string
+// ****************************************************************************
+std::string fileSearchNearest(const std::string &aPath, const std::string &aSource, int aMax, const std::string &aDirExtension, bool aRecursive) {
+  TFScripal obj(aSource, aMax);
+  
+  if (obj.error != "")
+    return(obj.error);
+  
+  TFFileIterate files(aPath, aDirExtension, aRecursive);
+  if (files.error)
+    return("path " + aPath + " not found or no permission");
+  
+  results.init(MATCH_NEAREST);
+   
+  while (files.error == 0) {
+    files.iterate();
+    if (files.error) 
+      return("");
+
+    std::string fileName = files.entry->path().string();
+   
+    if (obj.matchFile(fileName, ENC_UTF8)) {
+      results.matchType = obj.results.matchType;
+      results.push_back(obj.results);
+    }
+  };
+  
+  return("");
+};
+
+// ****************************************************************************
+// search for file(s) most similar to given file
+// aPath         - path to search in
+// aSrcFile      - source file 
+// aMin          - minimum match rating to see file as a match
+// aDirExtension - file types to search for in directories (default: "*")
+// aRecursive    - if true, search all subdirectories
+// aOutput       - output string, format depends on config.resultFormat 
+// return - error string or empty string
+// ****************************************************************************
+std::string fileSearchhBlock(const std::string &aPath, const std::string &aSource, double aMin, const std::string &aDirExtension, bool aRecursive, std::string &aOutput) {
+  TFScripal obj(aSource, aMin);
+  
+  if (obj.error != "")
+    return(obj.error);
+  
+  TFFileIterate files(aPath, aDirExtension, aRecursive);
+  if (files.error)
+    return("path " + aPath + " not found or no permission");
+  
+  results.init(MATCH_BLOCK);
+   
+  while (files.error == 0) {
+    files.iterate();
+    if (files.error) 
+      return("");
+
+    std::string fileName = files.entry->path().string();
+   
+    if (obj.matchFile(fileName, ENC_UTF8)) {
+      results.matchType = obj.results.matchType;
+      results.push_back(obj.results);
+    }
+  };
+  
+  return("");
+}
+
+// ****************************************************************************
+// search for files where source matches
+// aPath         - path to search in
+// aSource       - srcipal source 
+// aDirExtension - file types to search for in directories (default: "*")
+// aRecursive    - if true, serach all subdirectories
+// aOutput       - output string, format depends on config.resultFormat 
+// return - error string or empty string
+// ****************************************************************************
+std::string fileSearch(const std::string &aPath, const std::string &aSource, const std::string &aDirExtension, bool aRecursive, std::string &aOutput) {
+  std::string path = aPath;
+  std::string dirExtension;
+  std::string error = "";
+  TFScripal obj(aSource);
+
+  auto matchFcn = [&](auto file) { 
+    if (!file.is_directory()) {
+      std::string fileName = file.path().string();
+      if (( fileName.find("." + dirExtension) !=  nPos) || (dirExtension == "*")) {
+        std::cout << fileName << "\n";
+
+        // add  result to outStr
+        if (obj.matchFile(fileName, ENC_UTF8)) {
+          if (config.resultFormat == OPT_JSON)
+            aOutput += resultToJson(obj, obj, ENC_UTF8, fileName);
+          else if (config.resultFormat == OPT_CSV)  
+            aOutput += resultToCSV(obj, obj, ENC_UTF8, fileName);
+          else if ((config.resultFormat == OPT_HRF) || (config.resultFormat == OPT_HRFV))   
+            aOutput += resultToHRF(obj, obj, ENC_UTF8, fileName);
+        }
+      }
+    };
+    return(error);
+  };
+
+  try {
+    aOutput = "";
+
+    // error handling
+    if (obj.error != "") { 
+      error = obj.error + "'\n"; 
+      return(error);
+    }  
+
+    if (aDirExtension == "")
+      dirExtension = "*";
+    else  
+      dirExtension = aDirExtension;
+
+    if (aRecursive) {
+      for (const auto & file : std::filesystem::recursive_directory_iterator(path)) {
+        matchFcn(file);
+        if (error != "")
+          return(error);
+      }    
+    } else {
+      for (const auto & file : std::filesystem::directory_iterator(path)) {
+        matchFcn(file);
+        if (error != "")
+          return(error);
+      }  
+    }
+  } catch (const std::exception &aExc) {
+    error = "error: cannot access directory '" + aPath + "' or empty" + "'\n"; 
+    return(error);    
+  }  
+  
+  return(error);
+};
+
+
+/*
+ std::size_t pos = getPrevCP("dog dog dog dog", nPos);
+ std::cout << pos << "\n";
+ exit(0);
+
+  unitTestDigits(); 
+  exit(0);
+
+  TFAccess media;
+  media.assignString(" = { test {test}}"); 
+  size_t end =  findMarkedBlock(media, 3, "{", "}", {"n"});
+  std::cout << end << "\n";
+  exit(0);
+
+  std::bitset<_SP_ATTR_END> attrs;
+  if (isDigit(U'٢',attrs))
+    std::cout << "isDigit" << "\n";
+  exit(0);   
+  std::chrono::steady_clock::time_point startTime;
+  startTime =  std::chrono::steady_clock::now();
+  
+  std::string source = std::string(100000000,'X') + "TT";
+
+  try {
+    if (regex_match (source, std::regex(".*XTT")))
+    std::cout << "string:literal => matched\n";
+  } catch (const std::regex_error& e) {
+        std::cout << "regex_error caught: " << e.what() << '\n';
+        if (e.code() == std::regex_constants::error_brack) {
+            std::cout << "The code was error_brack\n";
+        }
+    }
+
+   auto endTime =  std::chrono::steady_clock::now();
+   auto processMilli =  std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+   auto processMicro =  std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+   auto processTime =  processMilli + (((long double)processMicro / 1000) - processMilli);
+   std::cout << processTime << "\n";
+   exit(0);
+    
+  Poco::UTF8Encoding utf8;
+  int nBytes; 
+  const std::size_t strsize = 10000000;
+  std::chrono::steady_clock::time_point startTime;
+  startTime =  std::chrono::steady_clock::now();
+  std::string str = std::string(strsize,'X');
+  int charcount = 0;
+  std::cout << "start....\n";
+ 
+  std::size_t pos = 0;
+  while(pos < strsize) {
+    nBytes = utf8.sequenceLength((const unsigned char*)str.c_str() + pos, 4);
+    if (nBytes == 0)
+      break;
+    pos += nBytes;
+    ++charcount; 
+  }
+
+   auto endTime =  std::chrono::steady_clock::now();
+   auto processMilli =  std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+   auto processMicro =  std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+   auto processTime =  processMilli + (((long double)processMicro / 1000) - processMilli);
+   std::cout << processTime << " , count: " << charcount << "\n";
+   exit(0);
+
+  
+  unitTestLib();
+  exit(0);
+
+  unitTestInterface();
+  exit(0);
+
+  unitTestTemplate();
+   exit(0);
+
+
+  std::cout << jaroWinklerDistance("82176821762", "82176821763") << "\n";
+  exit(0);
+  unitTestInterface();
+  exit(0);
+
+  unitTestInterface();
+  exit(0);
+
+  unitTestInterfaceError();
+  exit(0);
+
+  int res = -1;
+  char32_t result = res;
+  if (result == std::numeric_limits<char32_t>::max())
+    std::cout << "max value\n";
+  exit(0); 
+
+  TFScripal obj;
+  obj.unitTestPos();
+  exit(0);
+
+  unitTestInterface();
+  exit(0);
+
+  testArr({"1","2"});
+  exit(0);
+  const char16_t* source = u" match find(~'९ÚÜAA'); end; loop;";
+  printText((char*)source, 66, ENC_UTF16L);
+  printConst();
+
+  unitTestSplit();
+  unitTestReplace();
+  unitTestInterface();
+  exit(0);
+   */
+
+
+
+std::chrono::steady_clock::time_point startTime;
+  startTime =  std::chrono::steady_clock::now();
+  std::string str = std::string(10000000,'X');
+  int sum = 0;
+  std::cout << "start....\n";
+  for (uint64_t i = 1; i < 10000000000; ++i) {
+    sum += std::char_traits<char>::length(str.c_str());
+  }
+
+   auto endTime =  std::chrono::steady_clock::now();
+   auto processMilli =  std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+   auto processMicro =  std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+   auto processTime =  processMilli + (((long double)processMicro / 1000) - processMilli);
+   std::cout << processTime << " , sum: " << sum << "\n";
+   exit(0);
+
+
+template<typename SType> class TScripal {
+  public:
+  TScripal() {};
+  
+  TScripal(const SType &aSource) {};
+  
+  TScripal(const SType, int aMax);
+    
+  bool matchd(const SType &aText) {
+    return(match(objID, (const char*)aText.c_str(), (int)aText.size() * sizeMul));
+  };
+
+  bool matchFile(const SType &aText, int aFileEncoding);
+
+  bool replace(const SType &aText, const SType &aReplace); 
+  
+  bool replaceFile(const SType &aFileIn, const SType &aFileOut, const SType &aReplace, int aFileEncoding); 
+
+  bool split(const SType &aText);   
+
+  bool splitFile(const SType &aFileIn, const SType &aFileOut, int aFileEncoding);
+
+  int getResultSize();
+
+  SType getResult(int aIndex);
+
+  int objID;              // object ID of underlying TFScripal object
+  int sizeMul = 1;        // size mulitplicator for byte size , UTF16 = 2, UTF32 = 4   
+
+};
+template<> TScripal<std::string>::TScripal(const std::string &aSource) {
+  if (encoding != ENC_DEFAULT)
+    encoding = ENC_UTF8;
+  sizeMul = 1;  
+  objID = newCodeObj((char*)aSource.c_str(), aSource.size() * sizeMul);  
+};
+
+template<> TScripal<std::u16string>::TScripal(const std::u16string &aSource) {
+  if (encoding != ENC_DEFAULT) {
+    if (isBigEndian())
+      encoding = ENC_UTF16B;
+    else  
+      encoding = ENC_UTF16L;
+  }
+  sizeMul = 2;  
+  objID = newCodeObj((char*)aSource.c_str(), aSource.size() * sizeMul);  
+};
+
+template<> TScripal<std::u32string>::TScripal(const std::u32string &aSource) {
+  if (encoding != ENC_DEFAULT) {
+    if (isBigEndian())
+      encoding = ENC_UTF32B;
+    else  
+      encoding = ENC_UTF32L;
+  }
+  sizeMul = 4;  
+  objID = newCodeObj((char*)aSource.c_str(), aSource.size() * sizeMul);  
+};
+
+
+template<typename SType> int TScripal<SType>::getResultSize() {
+  return(getResultSize(objID));
+};
+
+void printConst() {
+  std::string utf8Text;
+  const char16_t* source = u" match find(~'९ÚÜAA'); end; loop;";
+  #ifdef WINDOWS
+    // force UTF8 in console 
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+  #endif
+ 
+  try {
+    utf8Text = encToUtf8(std::string_view((char*)source, 66), ENC_UTF16L);
+    printBytesHex(utf8Text);
+    // if not working use: 
+    // printBytesHex(utf8Text, ENC_UTF16L);
+  } catch(const std::exception &aExc) {
+    std::cout << "error\n";
+  }
+};
+
+
+// ******************** 
+  // integrity check  
+  if (logicOpd(aOperand.codeID)) {
+    // look for '(' as next
+    std::size_t pos = posEnd + 1;
+    while (pos < source.size()) {
+      if ((source[pos] != ' ') && (source[pos] != '(')) {
+        // no range
+        output->setError(ERR_NO_GROUP_BEGIN, posStart);
+        throw(std::runtime_error(ERR_FATAL));
+      };
+      if (source[pos] == '(')
+        break;
+        
+      ++pos;    
+    } 
+  }
+
+ 
+ 
+ 
+ unitTestSplit();
+  unitTestReplace();
+  exit(0);
+  const char* a = "hkhjhkhk";
+
+  std::cout << (std::string_view)(a) << "\n";
+  std::cout << ((std::string_view)(a)).substr(0,1) << "\n";
+  exit(0);
+
+   unitTestReplace();
+   exit(0);
+  char* init = (char*)u"print me out änd end";
+  std::string test(init, 42);
+  char* ret;
+  int retlen;
+  sendString((char*)test.c_str(), test.size(), ENC_UTF16L , &ret, &retlen);
+  printf("ret: %s\n", ret);
+  exit(0);
+
+  source = "match find(~'test'); end; loop;"; 
+  dirRecursive = false;
+  dirPath = "/opt/temp";
+  dirExtension = "txt";
+  runFileSearch();
+  exit(0);
+
+  std::string test ="\x01\n\r";
+  printCtrl(test);
+  std::cout << test << "\n";
+  exit(0);
+
+
+
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+  std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
+  char a; std::cin >> a;
+  exit(0);
+
+  TFScripal obj("match find( bow ~'A' repeat[2,@]( letter ) last ~'S' );ifMatch end; loop" );
+  std::string test = generateString(4000000, "");
+  obj.matchFile("/opt/temp/Miro3.txt");
+  std::cout << "results: " << obj.results.size() << "\n";
+  for (int i = 0; i < (int)obj.results.size(); ++i)
+    std::cout << obj.results[i] << "\n";
+                  std::cout << "\ntime(ms): " + std::to_string(obj.processTime) + "\n"; 
+  exit(0); 
+
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+  source = "match find(~'test'); end; loop;";
+  dirRecursive = false;
+  dirPath = "/opt/temp";
+  dirExtension = "txt";
+  runFileSearch();
+
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+  std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
+  char a; std::cin >> a;
+  exit(0);
+
+  TFScripal obj("match find('test'); end; loop;");
+  std::string test = generateString(4000000, "");
+  obj.matchFile("/opt/temp/Miro1.txt");
+  std::cout << "done...\n";
+  for (int i = 0; i < (int)obj.results.size(); ++i)
+    std::cout << obj.results[i] << "\n";
+                  std::cout << "\ntime(ms): " + std::to_string(obj.processTime) + "\n"; 
+  exit(0); 
+
+ 
+
+    unitTestNearest(PATTERN_LEVENPLUS);
+    exit(0);
+    source = "match find(~'test'); end; loop;";
+    dirRecursive= false;
+    dirPath = "/opt/temp";
+    dirExtension = "txt";
+    runFileSearch();
+    exit(0);
+
+  getFiles("./", "txt", true);
+      std::cout << "...\n";
+    std::cin.get();
+  exit(0);
+
+  unitTestNearestAlgo();
+  
+  unitTestNearest(PATTERN_LEVEN);
+  
+  unitTestNearest(PATTERN_LEVENPLUS);
+  exit(0);
+
+  unitTestReplace();
+  exit(0);
+
+
+  TFScripal obj((char*)u"match 'ZHÜO§'", 26, ENC_UTF16L);
+  std::cout << obj.match((char*)u"ZHÜO§", 10, ENC_UTF16L) << "\n";
+  exit(0);
+
+  config.setLocale("de", ENC_UTF8);
+  exit(0);  
+
+  printBytesHex("\xef\xbb\xbf");
+  
+  printBytesHex("test");
+  printBytesHex("ФЦз");
+  // Ф = D0 A4 	 	
+  // Ц = D0 A6
+  // з = D0 B7 	
+  exit(0);
+************************************************************************************************
+old fiel search in main
+
+void runFileSearch() {
+  std::string error = "";
+  error = runFileSearch(dirPath, source, dirExtension, dirRecursive);
+
+  std::string path = dirPath;
+  std::string outStr = "";
+
+  auto matchFcn = [&](auto file) { 
+    TFScripal*  obj = nullptr;
+    if (!file.is_directory()) {
+      std::string fileName = file.path().string();
+      if (( fileName.find("." + dirExtension) !=  nPos) || (dirExtension == "*")) {
+        std::cout << fileName << "\n";
+        //  match
+        if (obj != nullptr)
+          delete obj;
+
+        obj = new TFScripal(source);
+ 
+        // error handling
+        if (obj->error != "") { 
+          std::cout << "Error: " << obj->error << "'\n"; 
+          exitStatus = 1; 
+          if (obj != nullptr)
+            delete obj;
+          return;
+        }  
+
+       if (config.showCode) 
+         log("----- compilation -----\n" + printCode(obj->code));
+
+        // add  result to outStr
+        if (obj->matchFile(fileName, ENC_UTF8)) {
+          if (resultJson)
+            outStr += resultToJson(*obj, *obj, ENC_UTF8, fileName);
+          else if (resultCsv)  
+            outStr += resultToCSV(*obj, *obj, ENC_UTF8, fileName);
+          else   
+            outStr += resultToHRF(*obj, *obj, ENC_UTF8, fileName);
+        }
+      }
+    };
+    if (obj != nullptr)
+      delete obj;
+    return;
+  };
+
+  try {
+    if (dirRecursive) {
+      for (const auto & file : std::filesystem::recursive_directory_iterator(path)) {
+        matchFcn(file);
+        if (exitStatus > 0)
+          return;
+      }    
+    } else {
+      for (const auto & file : std::filesystem::directory_iterator(path)) {
+        matchFcn(file);
+        if (exitStatus > 0)
+          return;
+      }  
+    }
+  } catch (const std::exception &aExc) {
+    std::cout << "Error: cannot access directory '" + dirPath + "' or empty" << "'\n"; 
+    exitStatus = 1;
+    return;    
+  }  
+  
+  if (outStr != "")
+    std::cout << outStr << "\n"; 
+  
+  return;
+};
+
+
+************************************************************************************************
+  // test split, should show test1/ntest2/ntest3/n
+  std::cout << "result should show: \ntest1\ntest2\test3\n\n";
+  std::string source = "match find( blank ); ifMatch end; loop;"; 
+  std::string text = "    test1 test2    test3   "; 
+  std::string fileIn = "/tmp/testin"; 
+  std::string fileOut = "/tmp/testout"; 
+  
+  std::ofstream iFile(fileIn);
+  iFile << text;
+  iFile.close();
+    
+  TFScripal* obj = new TFScripal(source, false, false, false);
+  if (obj->error != "")
+     std::cout << Scripal::printError(obj->error, obj->errorPos, source) << "\n";
+
+  obj->split(text, SP_NOEMPTY);
+  for (auto value: obj->results) {
+    std::cout << value << "\n";
+  }  
+
+  std::cout << "\n";
+  obj->splitFile(fileIn,fileOut, SP_NOEMPTY);
+
+  std::ifstream oFile(fileOut);
+  if (oFile.is_open())
+    std::cout << oFile.rdbuf();
+    
+  exit(0);
+************************************************************************************************
+  
+
+
+
+if (operandOpen) {
+    curOpd = &accessOperand();
+    if (curOpd->opdtype == SP_OPD_NULL) {
+      // use all as default operand if not specified
+      curOpd->opdtype = SP_OPD_LOGICAL;
+     curOpd->codeID = SP_LOGIC_ALL;
+    } 
+    if (curOpd->opdtype != SP_OPD_LOGICAL) {
+      // block operand cannot start group  
+      output->setError(ERR_WRONG_OPERAND , posStart);
+      throw(std::runtime_error("fatal"));
+    }
+  } else {
+    curOpd = &setOperand();
+    // use all as default operand if not specified
+    curOpd->opdtype = SP_OPD_LOGICAL;
+    curOpd->codeID = SP_LOGIC_ALL;
+  };
+
+// ****************************************************************************
+// convert date in string to TFNum according to configuration
+// aString - string holding number
+// aNum    - converted float, UTC in second resolution,base date is October 15, 1582
+// return nPos or index in string
+// ****************************************************************************
+std::size_t textDateToTFNum(const std::string &aString, TFNum &aNum) {
+  int y =  0, m = 0, d = 0, n = 0, count;
+  std::string format = config.dateFormat + "%n";
+  try {
+    count = sscanf((char*)aString.c_str(), format.c_str(), &y,&m,&d,&n); 
+    if (count != dateFormatCount)
+      return(nPos);
+    Poco::DateTime dateTime = Poco::DateTime(y,m,d,0,0,0);
+    Poco::Timestamp::UtcTimeVal timeUTC = dateTime.utcTime();
+    aNum = (uint64_t)timeUTC / 1000000;  
+  } catch (std::exception &aExp) {
+    return(nPos);
+  }  
+  return(n - 1);
+};
+
+// ****************************************************************************
+// convert date to string according to formatting in config
+// aNum    - converted float, UTC in second resolution
+// return  - formatted string
+// ****************************************************************************
+Poco::DateTime dateTFNumToDT(TFNum &aNum) {
+  Poco::Timestamp::UtcTimeVal curTime = (uint64_t)aNum * 1000000;
+  Poco::DateTime dateTime = Poco::DateTime(curTime, 0);
+  
+  return(dateTime);
+}
+
+// ****************************************************************************
+// convert time in string to TFNum according to configuration
+// aString - string holding number
+// aNum    - converted float, holding overall seconds since midnight
+// return true if successfull
+// ****************************************************************************
+std::size_t textTimeToTFNum(const std::string &aString, TFNum &aNum) {
+  int h =  0, m = 0, s = 0, n = 0, count;
+  std::string format = config.timeFormat + "%n";
+  try {
+    count = sscanf((char*)aString.c_str(), format.c_str(), &h,&m,&s,&n); 
+    if (count != dateFormatCount)
+      return(nPos);
+
+    aNum = (uint64_t)(h * 60 * 60 + m * 60  + s); 
+  } catch (std::exception &aExp) {
+    return(nPos);
+  }  
+  return(n - 1);
+};
+
+
+// ****************************************************************************
+// convert time to string according to formatting in config
+// aNum    - converted float, holding overall seconds since midnight
+// return  - formatted string
+// ****************************************************************************
+Poco::DateTime  timeTFNumToDT(TFNum &aNum) {
+  int h = aNum / 3600;
+  int m = (aNum - (h * 3600)) / 60;
+  int s = (aNum - (h * 3600) - (m*60));
+  Poco::DateTime dateTime = Poco::DateTime(1970, 1, 1, h, m, s);
+  
+  return(dateTime);
+}
+
+// ****************************************************************************
+// convert date and time in string to TFNum according to configuration
+// aString - string holding number
+// aNum    - converted float, UTC in second resolution,base date is October 15, 1582
+// return true if successfull
+// ****************************************************************************
+std::size_t textDateTimeToTFNum(const std::string &aString, TFNum &aNum) {
+  int y =  0, m = 0, d = 0, h =  0, mi = 0, s = 0, n = 0, count;
+  std::string format = config.dateTimeFormat + "%n";
+  try {
+    count = sscanf((char*)aString.c_str(), format.c_str(), &y,&m,&d,&h,&mi,&s,&n); 
+    if (count != dateTimeFormatCount)
+      return(nPos);
+    Poco::DateTime dateTime = Poco::DateTime(y,m,d,h,mi,s);
+    Poco::Timestamp::UtcTimeVal timeUTC = dateTime.utcTime();
+    aNum = (uint64_t)timeUTC / 1000000;  
+  } catch (std::exception &aExp) {
+    return(nPos);
+  }  
+  return(n - 1);
+};
+
+
+// ****************************************************************************
+// convert datetime to string according to formatting in config
+// aNum    - converted float, UTC in second resolution,base date is October 15, 1582
+// return  - formatted string
+// ****************************************************************************
+Poco::DateTime dateTimeTFNumToDT(TFNum &aNum) {
+  Poco::Timestamp::UtcTimeVal curTime = (uint64_t)aNum * 1000000;
+  Poco::DateTime dateTime = Poco::DateTime(curTime, 0);
+  
+  return(dateTime);
+}
+
+/* measure time for simple strung search
+  std::string ao = std::string(10000000,'X') + "TT";
+  std::chrono::time_point<std::chrono::system_clock>  startTime, endTime;
+  startTime = std::chrono::high_resolution_clock::now();
+  size_t  t = ao.find("TT", 0);
+  endTime = std::chrono::high_resolution_clock::now();
+  auto processTime =  std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+  std::cout << processTime << " µs , " << t << "\n";
+*/  
+
+********************************************************************
+regex
+auto t1 = std::chrono::high_resolution_clock::now();  
+  std::regex e (".*TT");
+  std::string textCur = std::string(10000000,'X');
+  textCur += "TT";
+  bool a = std::regex_match(textCur, e);
+  //bool a = std::regex_match("software", e);
+  auto t2 = std::chrono::high_resolution_clock::now();  
+  std::cout << "regex: " << a << "  " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms\n";
+
+
+********************************************************************
+ Poco event loop
+
+/*  
+class HelloPocoApplication : public Poco::Util::Application {
+  protected:
+	virtual int main(const std::vector<std::string> &args) {
+
+  // initialization
+  init();
+
+  try {
+      
+      TFScripal obj;
+      obj.compileDebug(source);
+      
+      if (obj.error != "") {
+        std::cout << "Error: " << obj.error << " at: '" << source.substr(obj.errorPos, 100) << "'\n"; 
+      } else {
+        obj.runDebug(textString);
+        if (obj.error != "") { 
+          std::cout << "Error: " << obj.error << " at: '" << source.substr(obj.errorPos, 100) << "'\n"; 
+        } else {
+          if (obj.hasMatched)
+            std::cout << "result: any match- true\n"; 
+          else   
+            std::cout << "result: any match- false\n"; 
+
+          for (auto item : obj.results) {
+            std::cout << "match: '" << item << "'\n";  
+          }
+        } 
+      };      
+      std::cout << "press key...\n";
+      std::cin.get();
+    } catch(std::exception const& except) {
+      std::cout << except.what() << "\n";
+      std::cout << "press key...\n";
+      std::cin.get();
+    }  
+    return EXIT_OK;
+  };
+};
+
+POCO_APP_MAIN(HelloPocoApplication);
+*/
+
+test code 
+template <class charT, charT sep>
+class punct_facet: public std::numpunct<charT> {
+  protected:
+  charT do_decimal_point() const { return sep; }
+};
+
+
+/*
+  TFScripal obj("match find('test'); end; loop;", false, false, false);
+  obj.matchFile("/opt/scripal/test2.txt");
+  for (int i = 0; i < (int)obj.results.size(); ++i)
+    std::cout << obj.results[i] << "\n";
+                  std::cout << "\ntime(ms): " + std::to_string(obj.processTime) + "\n"; 
+  exit(0); 
+
+  Scripal::templates.set("a1", "test1");
+  Scripal::templates.set("a2", "test2\ntest22");
+  templates.store("/tmp/store.txt");
+  templates.reset();
+  templates.restore("/tmp/store.txt");
+  std::cout << *templates.find("a1") << "\n";
+  std::cout << *templates.find("a2") << "\n";
+  exit(0);
+
+  TFAccess a;
+  a.assignString(" an test. try") ; 
+  std::cout << findEOS(a, 8) << "\n";
+  std::cout << findEOS(a, 8) << "\n";
+  std::cout << findEOS(a, 9) << "\n";
+  std::cout << findEOS(a, 10) << "\n";
+  std::cout << findEOS(a, 11) << "\n";
+  exit(0);
+
+  std::string a = "ಭݣ𑜔hh"; // 0-2, 3-4, 5-8 
+  std::cout << getPrevCP(a, 0) << "\n";
+  std::cout << getPrevCP(a, 3) << "\n";
+  std::cout << getPrevCP(a, 5) << "\n";
+  std::cout << getPrevCP(a, 9) << "\n";
+  std::cout << getPrevCP(a, 10) << "\n";
+  std::cout << getPrevCP(a, nPos) << "\n\n";
+
+  std::cout << getCPSize(a,0) << "\n";
+  std::cout << getCPSize(a,1) << "\n";
+  std::cout << getCPSize(a,2) << "\n";
+  std::cout << getCPSize(a,3) << "\n";
+  std::cout << getCPSize(a,4) << "\n";
+  std::cout << getCPSize(a,5) << "\n";
+  std::cout << getCPSize(a,6) << "\n";
+  std::cout << getCPSize(a,7) << "\n";
+  std::cout << getCPSize(a,8) << "\n";
+  std::cout << getCPSize(a,9) << "\n";
+  std::cout << getCPSize(a,10) << "\n";
+  std::cout << getCPSize(a,11) << "\n";
+  exit(0);
+
+    Poco::UTF8Encoding utf8;
+   std::cout << utf8.isLegal((const unsigned char*)&a[3],1) << "\n";
+  int nBytes = utf8.sequenceLength((const unsigned char*)&a[1], 4);
+  std::cout << skipCP("hggh", 0 , 'g') << "\n";
+  exit(0);
+  
+  TFNum test = 0;
+  std::string num = "1010";
+  test = 77.67;
+  numTFNumToText(test, num);
+  std::cout << num <<  "\n";
+
+  numOctToText(test, num);
+  std::cout << num <<  "\n";
+  numHexToText(test, num);
+  std::cout << num <<  "\n";
+  exit(0);
+
+  TFNum test = 0xEFFFFFFF;
+  std::string result;
+  std::cout << numBinToText(test, result) << "\n";
+  std::cout << result << "\n";
+  exit(0);
+
+  std::bitset<_SP_ATTR_END> attrs(0);
+  attrs.set(SP_ATTR_BIN, true); 
+  std::cout << printNumber(test, attrs) << "\n";
+  exit(0);
+
+  std::cout << textDateToNum("1600.01.02", test) << "\n";
+  Poco::DateTime dateTime = dateTFNumToDT(test);
+  std::cout << dateTime.year() << "." << dateTime.month() << "." << dateTime.day() << "\n"; 
+
+  std::cout << textTimeToNum("18:01:02", test) << "\n";
+  dateTime = timeTFNumToDT(test);
+  std::cout << dateTime.hour() << ":" << dateTime.minute() << ":" << dateTime.second() << "\n"; 
+
+  std::cout << textDateTimeToTFNum("1600.01.02 18:01:02", test) << "\n";
+  dateTime = dateTimeTFNumToDT(test);
+  std::cout << dateTime.year() << "." << dateTime.month() << "." << dateTime.day() << "  " << dateTime.hour() << ":" << dateTime.minute() << ":" << dateTime.second()  << "\n"; 
+
+  exit(0);
+
+  textTimeToTFNum("12:45:09", test);
+  std::cout << "time " + timeTFNumToText(test) << "\n";
+
+  exit(0);
+
+  double s = Poco::NumberParser::parseFloat("123,44l", ',', '.');
+  std::cout << s << "\n";
+ 
+    std::cout.imbue(std::locale(std::cout.getloc(), new punct_facet<char, ','>));
+    std::cout << "My age is " << 3.1415 << " lightyears.\n";
+    std::cout << std::stof("4,56") << "\n";
+    std::cout << std::stof("4.56") << "\n";
+    std::cout.imbue(std::locale(std::cout.getloc(), new punct_facet<char, '.'>));
+    std::cout << std::stof("4,56") << "\n";
+    std::cout << std::stof("4.56") << "\n";
+
+  std::string source = "match find( blank ); ifMatch end; loop;"; 
+  std::string text = "    test test    test "; 
+   
+  TFScripal* obj = new TFScripal(source);
+  if (obj->error != "")
+     std::cout << Scripal::printError(obj->error, obj->errorPos, source) << "\n";
+
+  obj->split(text, SP_NOEMPTY);
+  for (auto value: obj->results) {
+    std::cout << "'" << value << "'\n";
+  }  
+  exit(0);
+
+  std::string source = "match find( 'test' ); ifMatch end; loop;"; 
+  std::string text = " test test test"; 
+   
+  TFScripal* obj = new TFScripal(source);
+  if (obj->error != "")
+     std::cout << Scripal::printError(obj->error, obj->errorPos, source) << "\n";
+
+  obj->replace(text, "xxxxxx");
+  std::cout << "'" << text << "'\n";
+  exit(0);
+   
+
+  Poco::UTF8Encoding utf8;
+ //  std::string a = u8" a\n.dd  ९ÚÜAA", b;
+   std::string a = u8"   a  kk d", b;
+
+   std::cout << findBlank(a, 0) << "\n";
+   std::cout << findBlank(a, 2) << "\n";
+   std::cout << findBlank(a, 3) << "\n";
+   std::cout << findBlank(a, 4) << "\n";
+   std::cout << findBlank(a, 5) << "\n";
+   std::cout << findBlank(a, 6) << "\n";
+   std::cout << findBlank(a, 7) << "\n";
+  exit(0);
+
+  std::cout << findEOS(a, 0) << "\n";
+  std::cout << findEOS(a, 1) << "\n";
+  std::cout << findEOS(a, 2) << "\n";
+  std::cout << findEOS(a, 3) << "\n";
+  std::cout << findEOS(a, 4) << "\n";
+  std::cout << findEOS(a, 5) << "\n";
+
+  char32_t aCodePoint = 't';
+  std::cout << Poco::Unicode::isAlpha(aCodePoint) << "\n";
+
+   char32_t curChar = 0;
+    std::string a = u8"९ÚÜAA", b;
+   getCP(a, 0, curChar);
+ b = toString(curChar);
+   std::cout << b << "\n";
+ exit(0);
+
+  Poco::UTF8Encoding utf8;
+  std::string a = u8"֗ ֗֗֗९test", b;
+  printf("%xu\n", a[0]);
+  std::cout << getCPSize(a, 0) << "\n";
+  std::cout << getCPSize(a, 1) << "\n";
+  std::cout << getCPSize(a, 2) << "\n";
+  std::cout << getCPSize(a, 3) << "\n";
+  std::cout << getCPSize(a, 4) << "\n";
+  std::cout << getCPSize(a, 5) << "\n";
+
+//  std::cout << getPrevCP(a, 1) << "\n";
+//  std::cout << getPrevCP(a, 2) << "\n";
+//  std::cout << getPrevCP(a, 3) << "\n";
+//  std::cout << getPrevCP(a, 4) << "\n";
+//  std::cout << getPrevCP(a, 5) << "\n";
+  exit(0);
+
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    char32_t ch;
+    for (int i = 0; i < 100000000; ++i) {
+      getCP(a, 0, ch) ;
+    }
+    b = toString(ch);
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+    std::cout << b << " , " << b.size() << "\n";
+    exit(0);
+
+    int ch = utf8.convert((const unsigned char*)a.c_str());
+    std::cout << a << " , "  << getCPSize(a, 0) << "\n";
+    printf("%02hhX %02hhX %02hhX %02hhX \n", a[0], a[1], a[2], a[3]);
+    b.resize(4);
+    int len = utf8.convert(ch, (unsigned char*)b.c_str(), 4);
+    b.resize(len);
+
+    printf("%02hhX %02hhX %02hhX %02hhX \n", (ch & 0xff),((ch & 0xff00) >> 8), ((ch & 0xff0000) >> 16), ((ch & 0xff000000) >> 24));
+
+    std::cout << "-> " << len << " , " << b << "\n";
+    exit(0);
+ 
+ std::string m = "Any test.  I cannot say more. tried hard.";
+  std::cout << testBOS(m, 1) << "\n";
+  TFScripal* obj;
+  obj = new TFScripal("match ('test'); end");;
+  obj->run("test");      
+	printf("%lu\n", obj->results.size());
+
+  std::string m = "Ȁtest";
+  char32_t codePoint;
+  int len = getCP(m, 0, codePoint); 
+  std::cout << len << " , " << toString(codePoint) << "\n";
+
+   std::string m = "test";
+  char32_t codePoint = getCP(m, 20); 
+  std::cout << codePoint << "\n";
+  
+  std::cout << m.at(30) << "\n";
+ 
+ std::string code =   " &roadMarker& \n\
+  match find (int blank repeat[1,3](not(&roadMarker&) word) &roadMarker&) \n\
+  ifMatch { \n\
+    match all (\",\" blank int repeat[1,3](word) blank any(\",\" eol eot)) \n\
+    endeot \n\
+  } \n\
+  reset  \n\
+  loop ";
+ 
+  std::string test = "  abc  "; 
+  std::cout << findBlank(test, 2) << "\n";
+  exit(0);
+
+  std::bitset<_SP_ATTR_END> attrs;
+  std::string test = " 123ds";
+  std::size_t curBegin, curEnd = 4; 
+  if ((curBegin = findNumberBegin(test, curEnd + 1, attrs)) != nPos)
+    std::cout << curBegin << " , " << curEnd << "\n";
+  else   
+    std::cout << "nomatch\n";
+  exit(0);  
+*/
+ //std::cout << std::hex << Poco::Unicode::toUpper(0x576) << "\n";
+  //char32_t ch =  getCPDirect(test, 0);
+  // std::cout << "char: " << std::to_string(ch) << "\n";
+
+
+// read codepoiunt UTF8
+char32_t getCP2(const char* aText, std::size_t aSize, const std::size_t aIndex) {
+  int l = aSize - aIndex;
+  const char* u = aText + aIndex;
+
+  if (l<1) return -1; 
+  unsigned char u0 = u[0]; 
+  if (u0>=0   && u0<=127) return u0;
+ 
+  if (l<2) return -1; 
+  unsigned char u1 = u[1]; 
+  if (u0>=192 && u0<=223) return (u0-192)*64 + (u1-128);
+ 
+  if (u[0]==0xed && (u[1] & 0xa0) == 0xa0) return -1; //code points, 0xd800 to 0xdfff
+  if (l<3) return -1; 
+  unsigned char u2 = u[2]; if (u0>=224 && u0<=239) return (u0-224)*4096 + (u1-128)*64 + (u2-128);
+
+  if (l<4) return -1; 
+  unsigned char u3 = u[3]; if (u0>=240 && u0<=247) return (u0-240)*262144 + (u1-128)*4096 + (u2-128)*64 + (u3-128);
+  return -1;
+}
+
+
+void unitTestDigits()

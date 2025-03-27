@@ -1,0 +1,4 @@
+[0, 26] "First sentence to be found."
+[28, 56] "This ist the second sentence."
+[58, 80] "Here we have the third."
+[82, 119] "And now use special characters ĞĤǂ."

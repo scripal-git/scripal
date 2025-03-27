@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scripal-cli", "scripal-cli\scripal-cli.vcxproj", "{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scripal-dll", "scripal-dll\scripal-dll.vcxproj", "{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scripal-lib", "scripal-lib\scripal-lib.vcxproj", "{512CBA29-DBFA-42E8-B466-885A3B7336DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Debug|x64.ActiveCfg = Debug|x64
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Debug|x64.Build.0 = Debug|x64
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Debug|x86.ActiveCfg = Debug|Win32
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Debug|x86.Build.0 = Debug|Win32
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Release|x64.ActiveCfg = Release|x64
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Release|x64.Build.0 = Release|x64
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Release|x86.ActiveCfg = Release|Win32
+		{4162FA76-AE3E-4A9D-ADA6-9ACE1AE8FE7D}.Release|x86.Build.0 = Release|Win32
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Debug|x64.ActiveCfg = Debug|x64
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Debug|x64.Build.0 = Debug|x64
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Debug|x86.ActiveCfg = Debug|Win32
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Debug|x86.Build.0 = Debug|Win32
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Release|x64.ActiveCfg = Release|x64
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Release|x64.Build.0 = Release|x64
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Release|x86.ActiveCfg = Release|Win32
+		{2CDA64CA-9C97-4DD6-AB45-CDFF5F15BD39}.Release|x86.Build.0 = Release|Win32
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Debug|x64.ActiveCfg = Debug|x64
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Debug|x64.Build.0 = Debug|x64
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Debug|x86.Build.0 = Debug|Win32
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Release|x64.ActiveCfg = Release|x64
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Release|x64.Build.0 = Release|x64
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Release|x86.ActiveCfg = Release|Win32
+		{512CBA29-DBFA-42E8-B466-885A3B7336DD}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6AEF698-B9EC-4D02-922F-E429F3338E0A}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,21 @@
+Testing scripal:
+
+to test library, start binary with --unittest=xxx
+
+"lib"
+"digits"
+"split"
+"replace"
+"nearest"
+"nearestalgo"
+"block"
+"config"
+"template"
+"interface"
+"decodefile"
+"filesearch"
+
+***************************************
+
+to test main
+call scripalTest.sh in ../test

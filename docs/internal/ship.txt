@@ -1,0 +1,129 @@
+******************************************************************************************
+FPM:
+fpm -s dir -t deb -n usc-trace-manager -a x86_64 -v '1.0.1' ./
+******************************************************************************************
+
+
+******************************************************************************************
+packing scripal
+tar --exclude='.git'  --exclude='ship/*.deb' --exclude='ship/*.rpm' --exclude='ship/build' -czf scripal.tgz scripal
+
+******************************************************************************************
+
+Building Poco in case there ist no ready to use package
+
+clone sources
+
+git clone -b master https://github.com/pocoproject/poco.git
+
+static and dynamic versions are needed:
+
+// to clean build
+rm -rf build
+
+
+// build Poco dynamic
+cmake -H./ -B./build -DBUILD_SHARED_LIBS=ON -DENABLE_TESTS=OFF -DENABLE_SEVENZIP=ON -DENABLE_NETSSL=OFF -DENABLE_CRYPTO=OFF -DENABLE_JWT=OFF -DENABLE_NET=OFF -DENABLE_DATA=OFF -DENABLE_DATA_MYSQL=OFF -DENABLE_DATA_SQLITE=OFF -DENABLE_DATA_POSTGRESQL=OFF -DENABLE_DATA_ODBC=OFF -DENABLE_MONGODB=OFF -DENABLE_REDIS=OFF -DENABLE_APACHECONNECTOR=OFF -DENABLE_ENCODINGS=ON            
+cmake --build ./build
+
+// build Poco static
+cmake -H./ -B./build -DBUILD_SHARED_LIBS=OFF -DENABLE_TESTS=OFF -DENABLE_SEVENZIP=ON -DENABLE_NETSSL=OFF -DENABLE_CRYPTO=OFF -DENABLE_JWT=OFF -DENABLE_NET=OFF -DENABLE_DATA=OFF -DENABLE_DATA_MYSQL=OFF -DENABLE_DATA_SQLITE=OFF -DENABLE_DATA_POSTGRESQL=OFF -DENABLE_DATA_ODBC=OFF -DENABLE_MONGODB=OFF -DENABLE_REDIS=OFF -DENABLE_APACHECONNECTOR=OFF -DENABLE_ENCODINGS=ON            
+cmake --build ./build
+
+******************************************************************************************
+
+build Scripal under Linux
+
+clean:
+cmake --build ./cmake-build --target clean
+
+build:
+cmake --build ./cmake-build
+
+
+
+make staticLib
+make sharedLib
+make release
+make install
+
+
+
+=== build completed successfully (0 errors, 0 warnings), total time: 00:00:08 seconds ===
+make -j8 -e -f  Makefile
+----------Building project:[ scripalLinux - Library ]----------
+make[1]: Entering directory '/opt/scripal'
+g++  -c  "/opt/scripal/src/TFAccess.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_TFAccess.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/main.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_main.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/general.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_general.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/TFTemplate.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_TFTemplate.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/TFCompile.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_TFCompile.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/text.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_text.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+g++  -c  "/opt/scripal/src/TFScripal.cpp" -O3 -Wall  -Wno-attributes  -Wno-unused-function -DNDEBUG  -o build-Library/src_TFScripal.cpp.o -I. -I/opt/scripal/inc -I/opt/scripal/src
+ar rcu build-Library/lib/scripalLinux.a @build-Library/ObjectsList.txt
+ar: `u' modifier ignored since `D' is the default (see `U')
+make[1]: Leaving directory '/opt/scripal'
+
+
+The lib is now called scripalLinux.a
+
+Now copy scripalLinux.a,  libPocoUtil.a, libPocoFoundation.a into separate directory exmp. /opt/scrBuild 
+and use ar command to extract objects from lib
+PocoFoundation;PocoUtil;PocoJSON;PocoEncodings;PocoZip
+
+ar -xv libPocoUtil.a
+ar -xv libPocoFoundation.a
+ar -xv libPocoJSON.a
+ar -xv libPocoEncodings.a
+ar -xv libPocoZip.a
+ar -xv scripalLinux.a
+
+build library "libscripal.a" from all objects (Poco + scripal)
+
+ar -rc libScripal.a *.o
+
+Now write a test program:
+
+**********************************************
+
+#include <stdio.h>
+#include <scripal.hpp>
+
+int main(int argc, char **argv) {
+  Scripal::init();
+      
+  std::cout << "version: " << Scripal::VERSION << "\n\n";
+  
+  // set time measurement on
+  Scripal::config.measureTime = true;
+  
+  // scripal object
+  auto obj = new Scripal::TFScripal("match ('test'); end");;
+  obj->match("test");      
+
+	std::cout << "results: " << obj->results.size() << " , '" << obj->results.results[0] << "' , pos: " << obj->results.positions[0] << "\n\n";
+	return 0;
+}
+
+**********************************************
+
+and built test (lib is in /opt/scrBuild in this example)
+
+/usr/local/bin/g++ -c "/opt/test/test/main.cpp" -g -O0 -Wall -o ../build-Debug/test/main.cpp.o -I. -I/opt/scripal/inc -I/opt/scrBuild
+/usr/local/bin/g++ -o ../build-Debug/bin/test @../build-Debug/test/ObjectsList.txt -L. -L/opt/scrBuild -lscripal -static
+
+**********************************************
+
+external tools
+
+use pdftotext 
+
+https://www.xpdfreader.com/download.html
+
+**********************************************
+
+testing
+
+valgrind --gen-suppressions=yes  --track-origins=yes --leak-check=full --leak-resolution=high /opt/scripal/scripal
+
+

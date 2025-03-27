@@ -1,0 +1,5 @@
+match find (bos)
+ifMatch { 
+  match find( eos )
+  end }
+loop

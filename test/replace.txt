@@ -1,0 +1,3 @@
+Find all occurences of word  testSrc and replace with testDst.
+testSrc may be in any sentence.
+This ist the last occurence of testSrc.

@@ -1,0 +1,123 @@
+PANDOC:
+
+Webseite laden:
+pandoc -t plain --request-header User-Agent:"Mozilla/15.0" 'https://bild.de/'
+
+C:\Programme\Pandoc\pandoc test1.docx -f docx -t txt -s -o test1.txt
+// install visual studio
+https://visualstudio.microsoft.com/
+
+
+****************************
+test cases
+
+/opt/scripal/scripal "match find('0x' pure hex[0, ffffffffff]);ifmatch end; loop;" -b /opt/logs/BGL.log -t
+
+/opt/scripal/scripal  "match skip find( any(eos space ',') ); ifMatch { match (repeat[3,@] (any(letter digit)) '@' letter); ifMatch { match find( any( ',' space eol eos )); endlast }}; loop;" -b ./test/test.txt -t
+
+
+****************************
+packing scripal
+
+tar --exclude='.git'  --exclude='ship/*.deb' --exclude='ship/*.rpm' --exclude='ship/build' -czf scripal.tgz scripal
+
+*********************************************************
+Unittest
+
+--unittest=
+
+"lib"
+"digits"
+"split"
+"replace"
+"nearest"
+"nearestalgo"
+"block"
+"config"
+"template"
+"interface"
+"decodefile"
+"filesearch"
+
+*********************************************
+
+program args
+
+"match ('test')"  "test"
+"match find( word test( space 'more' )); end; loop;" "Find the word that is followed by more and maybe even more"
+
+*********************************************
+
+Wrapper:
+
+Template Objekt Mutex geschützt
+
+
+
+{ "task: test *at* attribute",
+  "match (find (take 'test') char)",
+  "   test2",
+  {"t"}
+},
+
+{ "task: test *take* attribute",
+  "match (find (take 'test') char)",
+  "   test2",
+  {"2"}
+},
+
+{ "task: test *test* attribute",
+  "match find (test  'test')",
+  "      test",
+  {""}
+},
+
+************************************************************************************************************
+void testCode() {
+  std::string text = "find any tests where a test might be testing and testet stuff is the best";
+  std::string source = "Test";
+  TFScripal obj(source, 5);
+  obj.match(text);
+  std::cout << "source :'" << source << "'\n";
+  std::cout << "text   :'" << text << "'\n\n";
+  for (size_t i = 0; i < obj.positions.size(); ++i) {
+    std::cout << "rating : " << obj.ratings[i] << " , '" << obj.results.text[i] << "' [" << obj.results.positions[i][0] << "," << obj.results.positions[i][1] << "]\n";
+  }
+  exit(0);
+};
+
+
+source :'Test'
+text   :'find any tests where a test might be testing and testet stuff is the best'
+
+rating : 0 , 'test' [23,26]
+rating : 1 , 'tests' [9,13]
+rating : 1 , 'best' [69,72]
+rating : 2 , 'testet' [49,54]
+rating : 3 , 'be' [34,35]
+
+
+***********************************************
+ unit test
+***********************************************
+
+scripal --unitest=
+
+lib
+digits
+split
+replace
+nearest
+nearestalgo
+block
+config
+template
+interface
+decodefile
+filesearch
+
+**************************************************
+fpm
+**************************************************
+
+fpm -s dir -t deb -n usc-trace-manager -a x86_64 -v $(VERSION) --deb-user debian --deb-group debian --deb-systemd-auto-start --deb-systemd-enable --deb-systemd usc-trace-manager.service target/usc-trace-manager=/opt/usc-trace-manager/bin/usc-trace-manager ./trace_manager.env=/etc/default/usc-trace-manager/trace_manager.env ./files/sources.json=/etc/default/usc-trace-manager/sources.json

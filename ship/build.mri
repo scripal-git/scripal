@@ -1,0 +1,9 @@
+create libscripal.a
+addlib libscripal_.a
+addlib libPocoEncodings.a 
+addlib libPocoFoundation.a
+addlib libPocoUtil.a
+addlib libPocoZip.a
+addlib libPocoJSON.a
+save
+end
