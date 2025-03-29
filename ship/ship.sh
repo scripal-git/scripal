@@ -32,7 +32,7 @@ mkdir -p ./build/usr/include/scripal
 # copy files
 cp -f ../cmake-build/*.a ./build/usr/lib/scripal
 cp -f ../cmake-build/*.so ./build/usr/lib/scripal
-cp -fr ../wrapper/* ./build/usr/lib/scripal/wrapper
+cp -fra ../wrapper/* ./build/usr/lib/scripal/wrapper
 rm -fr ./build/usr/lib/scripal/wrapper/js/node_modules
 cp -f ../scripal ./build/usr/bin
 cp -f ../inc/* ./build/usr/include/scripal
@@ -79,5 +79,6 @@ fpm -s dir -t deb -p "scripal.debian_${version}_amd64.deb" -a x86_64 $parms "${d
 mv -f ./build/usr/lib ./build/usr/lib64
 
 # Fedora
-fpm -s dir -t rpm -p "scripal.fedora.${version}.x84_64.rpm" -a x86_64 $parms "${description[@]}" --rpm-auto-add-directories --rpm-use-file-permissions --rpm-use-file-permissions \
-  --depends poppler-utils --depends pandoc ./
+sudo fpm -s dir -t rpm -p "scripal.fedora.${version}.x84_64.rpm" -a x86_64 $parms "${description[@]}" \
+  --rpm-auto-add-directories --rpm-use-file-permissions \
+  --depends poppler-utils --depends pandoc  ./
