@@ -34,13 +34,13 @@ Alternative: You may use the included Jar files under **/wrapper/java/linux** or
 Assuming that the scripal package and its classes are available in the classpath. <br><br>
 **Linux:** example call with (find out the path to jna-xxx.jar)
 <pre>
-java -cp "./:scripalwrapper.jar:/usr/share/maven-repo/net/java/dev/jna/jna/debian/jna-debian.jar" TestScripal.java
+java -cp "./linux/scripalwrapper.jar:/usr/share/maven-repo/net/java/dev/jna/jna/debian/jna-debian.jar" TestScripal.java
 </pre>
 **Windows:** example call with (find out the path to jna-xxx.jar)
 <pre>
-java -cp ".;.\scripalwrapper.jar;.\jna-jpms-5.16.0.jar" TestScripal.java
+java -cp ".;.\windows\scripalwrapper.jar;.\jna-jpms-5.16.0.jar" TestScripal.java
 </pre> 
-
+To avoid warnings with native access, set **--enable-native-access=ALL-UNNAMED** when calling Java.<br>
 ## run Java test program 
 <pre>
 import java.io.BufferedReader;

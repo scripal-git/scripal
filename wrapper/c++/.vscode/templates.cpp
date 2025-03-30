@@ -1,3 +1,0 @@
-{
-  "findtest": "match find('test')"
-  }
