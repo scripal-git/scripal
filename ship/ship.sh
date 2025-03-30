@@ -38,6 +38,7 @@ cp -f ../scripal ./build/usr/bin
 cp -f ../inc/* ./build/usr/include/scripal
 cp -rf ../test/* ./build/usr/lib/scripal/test
 chown -R root:root ./build
+chmod -R ugo+rw ./build/usr/lib/scripal/wrapper
 
 # Ubuntu version 25_x
 #fpm -s dir -t deb -p "scripal.ubuntu.25_${version}_amd64.deb" -a x86_64 $parms "${description[@]}" --depends libpocofoundation100 \
