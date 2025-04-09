@@ -14,7 +14,7 @@ Using other encodings causes some performance overhead.
 [install packages](/docs/InstallPackage.md) <br>
 
 ### Python module
-Scripal use ctypes https://docs.python.org/3/library/ctypes.html <br>
+Scripal use ctypes [https://docs.python.org/3/library/ctypes.html](https://docs.python.org/3/library/ctypes.html) <br>
 This module must be available.
 
 The python Scripal module is [scripal.py](/wrapper/python/scripal.py). It ist not available in pip and consists of only one file. <br>

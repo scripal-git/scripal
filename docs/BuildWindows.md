@@ -6,13 +6,13 @@ install Visual Studio with C++ support: <https://visualstudio.microsoft.com/down
 
 ## Git
 
-install Git CLI: <https://github.com/cli/cli#installation>
+install Git CLI: [https://github.com/cli/cli#installation]([https://github.com/cli/cli#installation)
 
 ## Poco C++ libraries (minimum version 1.11.0 required)
 
 An easy way to install Poco libraries under Windows is to use vcpkg.
 
-if vcpkg has to be installed, use git ( <https://git-scm.com/downloads/win> )
+if vcpkg has to be installed, use git ( [https://git-scm.com/downloads/win](https://git-scm.com/downloads/win) )
 <pre>
 git clone https://github.com/Microsoft/vcpkg.git
 </pre>
@@ -25,7 +25,7 @@ vcpkg install POCO
 
 or build Poco yourself 
 
-see <https://docs.pocoproject.org/current/00200-GettingStarted.html>
+see [https://docs.pocoproject.org/current/00200-GettingStarted.html](https://docs.pocoproject.org/current/00200-GettingStarted.html)
 
 static and dynamic versions are needed
 

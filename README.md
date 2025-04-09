@@ -135,7 +135,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Notices
 
 Scripal uses Poco C++ libraries, special thanks to a great team!
-see: https://pocoproject.org/ or https://github.com/pocoproject/poco
+see: [https://pocoproject.org/](https://pocoproject.org/) or [https://github.com/pocoproject/poco](https://pocoproject.org/)
 
 ## Contact
 

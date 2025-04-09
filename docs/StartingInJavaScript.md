@@ -22,7 +22,7 @@ npm install ref-napi
 
 Install FFI package:
 
-https://www.npmjs.com/package/@makeomatic/ffi-napi
+[https://www.npmjs.com/package/@makeomatic/ffi-napi](https://www.npmjs.com/package/@makeomatic/ffi-napi)
 
 <pre>
 npm install @makeomatic/ffi-napi
