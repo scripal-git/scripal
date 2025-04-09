@@ -10,7 +10,7 @@
 
 ### C module
 
-See how to use Scripal in C [main.c](/wrapper/c/main.c). <br>
+See how to use Scripal in C [main.c](/wrapper/c/main.cpp). <br>
 Every single thread must call **initLibraryC(config, encoding)** to specify the entire path to the config file used (leave empty for default) and the encodig of the OS environment. **ENC_DEFAULT** will denote the standard.<br> 
 For compile options see below.<br>
 All functions returning results in char** parameters will allocate and reallocate the necessary memory. Use NULL on first call.<br>

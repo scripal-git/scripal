@@ -2,7 +2,7 @@
 
 ## Installation
 
-[prerequisites](/docs/InstallPrerequisites.md) <br>
+[prerequisites](/docs/InstallPrerequisites.md)<br>
 
 ### clean build (else skip to ready to use packages) 
 
