@@ -31,25 +31,25 @@ Copy scripal.lib, scripal.dll and the binary to your preferred location. Remembe
 Example **baseInit("pathToDLL")**  
 
 ## Linux build script
-To build Scripal on Linux systems, you may call https://scripal.org/downloads/linux/buildLinux.sh 
+To build Scripal on Linux systems, you may call [https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) 
 
 ## language support
 You may download the Scripal modules for programming languages here:
 
 ### C language
-https://scripal.org/downloads/wrapper/c/scripalC.zip
+[https://scripal.org/downloads/wrapper/c/scripalC.zip](https://scripal.org/downloads/wrapper/c/scripalC.zip)
 
 ### C++ language
 [https://scripal.org/downloads/wrapper/c++/scripalC++.zip](https://scripal.org/downloads/wrapper/c%2B%2B/scripalC%2B%2B.zip)
 
 ### C# language (Windows only)
-https://scripal.org/downloads/wrapper/cs/scripalCS.zip
+[https://scripal.org/downloads/wrapper/cs/scripalCS.zip](https://scripal.org/downloads/wrapper/cs/scripalCS.zip)
 
 ### Python3 language
-https://scripal.org/downloads/wrapper/python/scripalPython.zip
+[https://scripal.org/downloads/wrapper/python/scripalPython.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
 
 ### JavaScript (Node.js) language
-https://scripal.org/downloads/wrapper/js/scripalJS.zip
+[https://scripal.org/downloads/wrapper/js/scripalJS.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
 
 ### Java language
-https://scripal.org/downloads/wrapper/java/scripalJava.zip
+[https://scripal.org/downloads/wrapper/java/scripalJava.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
