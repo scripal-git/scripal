@@ -51,7 +51,7 @@ To build Poco with Scripal, open **\win\Poco4Scripal.sln**
 Select Debug or Release versions and static/dynamic build types.
 Build with **Build** solution from main menu
 
-To build Poco with Scripal, open **\win\scripal.sln**
+To build Scripal, open **\win\scripal.sln**
 
 To tell Scripal about your Poco Build: open Developer Powershell in Visual Studio and execute
 <pre>
