@@ -364,12 +364,18 @@ Results are held in arrays or may be obtained in JSON or CSV format.
 
 <b>\<name = template\></b>                       : denote template
 
-Templates are place holders for existing sources. By specifying the name of the  template you use a certain code fragment several times.
-A change in the template causes a change in all instances (much like functions in programming languages).
+Templates are used for repetitive expressions, like macros. By specifying the name of the  template you use a certain code fragment several times.
+A change in the template causes a change in all instances.
 
-<pre>example: match find (< name > < address > < tel > < tel >) </pre>
-will use already existing, tested source to find text in the format:<br>
-name  address  telephone number 1  telephone number 2  
+<pre>< roadMarker = { any( ~'avenue' ~'ave.' ~'road' ~'street' ~'boulevard'  ~'drive'  ~'lane' ) } >  
+match find( int[1,10000] blank repeat[1,3]( !( < roadMarker > ) word ) blank < roadMarker > ) 
+ifMatch { 
+  matchEnd ( ',' blank int[1,@] repeat[1,3]( blank word ) at any(',' eol eot ))
+} 
+</pre>
+defines **roadMarker** as a template to match any road type<br>
+the entire expression will match an address like 
+**1007 Mountain Drive, 63527 Gotham City**  
   
 define a template in the source by using  
 <pre>< name = { code } ></pre>
@@ -380,7 +386,8 @@ templates may have arguments
 which will be substituted by caller arguments in: <br>
 <pre>< person {'mike'}{'myers'} ></pre>
 
-<1> and <2> in template person will be substitued with 'mike' and 'myers'
+<1> and <2> in template person will be substitued with **'mike'** and **'myers'**
+so template **person** will match for first name and surname 
 
 ## configuration
 

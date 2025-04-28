@@ -13,7 +13,7 @@ Using other encodings causes some performance overhead.
 [install packages](/docs/InstallPackage.md) <br>
 
 ### Java module
-Scripal relies on https://github.com/java-native-access/jna , Java Native Access. <br>
+Scripal relies on [https://github.com/java-native-access/jna](https://github.com/java-native-access/jna) , Java Native Access. <br>
 This Library must be available.
 The Java module is [base.java](/wrapper/java/base.java). It consists of only one file. <br>
 See how to use Scripal in Java [TestScripal.java](/wrapper/java/TestScripal.java) <br>

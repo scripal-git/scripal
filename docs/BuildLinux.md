@@ -8,20 +8,20 @@ install **build-essential** package (Ubuntu, Debian) or separately **gcc, g++, m
 
 ## Git
 
-install Git CLI: <https://github.com/cli/cli#installation>
+install Git CLI: [https://github.com/cli/cli#installation](https://github.com/cli/cli#installation)
 
 or use package 'git' of your Linux distro
 
 ## CMake
 
-install CMake: <https://cmake.org/download/> 
+install CMake: [https://cmake.org/download/](https://cmake.org/download/) 
 
 or use package 'cmake' of your Linux distro
 
 ## build script 
 
 to install Poco libraries and Scripal you may call the bash script **buildLinux.sh**<br>
-download script from: https://scripal.org/downloads/linux/buildLinux.sh <br>
+download script from: [https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) <br>
 
 copy **buildLinux.sh** into the directory where Scripal and Poco libraries should be installed (recommendation: '/opt') and execute<br>
 
