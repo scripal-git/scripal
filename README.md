@@ -41,7 +41,7 @@ use templates for repeating patterns:<br>
 * **deterministic:** Will produce the same replicable result in any programming language on any OS and fully supports UTF-8, -16, -32, Windows code pages and most other popular character encodings.<br><br>
 * **more intuitive and precise than RegEx** ex.: match number in the range 380-1400<br>
  RegEx: &nbsp; **\b(3[8-9][0-9]|[4-9][0-9]{2}|1[0-3][0-9]{2}|1400)\b**<br>
- Scripal: &nbsp; **match (int[380,1400])**
+ Scripal: &nbsp; **match find (int[380,1400]); ifMatch end; loop**
 
 ###  how it works  
 
