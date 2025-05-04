@@ -1,6 +1,6 @@
-# Scripal: Starting in Python3
+# Scripal: Starting in Python3 (minimum version 3.8)
 
-Earlier Python versions are not supported. Scripal is most efficient when using UTF-8 as base encoding in Python3.
+Earlier Python versions are not supported, Python3 should be at least 3.8.1. Scripal is most efficient when using UTF-8 as base encoding in Python3.
 Check default encoding by calling **locale.getpreferredencoding()**
 or set **PYTHONUTF8 = 1** to force.
 Using other encodings causes some performance overhead.
