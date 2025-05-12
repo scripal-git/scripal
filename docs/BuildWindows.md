@@ -35,15 +35,14 @@ Scripal application:
 git clone -b main git@github.com:scripal-git/scripal.git
 </pre>
 
-To build Poco with Scripal, open **\win\Poco4Scripal.sln**
+To build only Poco projets for Scripal, open **\win\Poco4Scripal.sln**
 
 Select Debug or Release versions and static/dynamic build types.
-Build with **Build** solution from main menu
 
 To build Scripal, open **\win\scripal.sln**
 
 Select Debug or Release versions and static/dynamic build types.
-Build with **Build solution** from main menu
+
 
 
 
