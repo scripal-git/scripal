@@ -18,4 +18,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y &quot;$(ProjectDir)..\..\..\win\x64\Release\dll\scripal.dll&quot; &quot;$(OutDir)*.*&quot; /D" />
+  </Target>
+
 </Project>

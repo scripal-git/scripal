@@ -13,7 +13,6 @@ namespace ScripalWrapper_CLI
     {
         static void Main(string[] args)
         {
-            // test python wrapper
 
             // init functions
             string lpath = "";
@@ -23,8 +22,7 @@ namespace ScripalWrapper_CLI
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                //TODO: release path
-                lpath = "..\\..\\..\\..\\..\\..\\win\\x64\\Debug\\dll\\";
+                lpath = Environment.CurrentDirectory; 
             }
             Scripal.baseInit(lpath);
             Scripal.libInit("", Scripal.ENC_UTF8);
@@ -58,7 +56,6 @@ namespace ScripalWrapper_CLI
             Console.WriteLine(obj.getResultJSON() + "\n");
             Console.WriteLine("results as HRF:");
             Console.WriteLine(obj.getResultHRF());
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("nearest", "test", 0.5);
             result = obj.match("Find the words like test, tests and TEST.");
@@ -75,7 +72,6 @@ namespace ScripalWrapper_CLI
             {
                 Console.WriteLine(obj.results.text[i]);
             }
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("block", "testing", 0.5);
             result = obj.match("resting");
@@ -88,17 +84,14 @@ namespace ScripalWrapper_CLI
             Console.WriteLine("block match result: " + result + " 'nesting'");
             Console.WriteLine(obj.results.ratings[0]);
             Console.WriteLine(" ");
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("source", "match find(bow 'a'); ifMatch matchEnd find(eow); loop;");
             result = obj.replace("Find the words apple, ape plus award.", "___");
             Console.WriteLine("source replace result: " + result + " " + obj.results.text[0]);
             Console.WriteLine(" ");
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("nearest", "test", 0.5);
             result = obj.replaceFile("test.txt", "testout.txt", "___");
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("source", "match find(any (' ', ',', '.')); ifMatch end; loop;");
             result = obj.split("Find the words apple, ape plus award.");
@@ -108,13 +101,11 @@ namespace ScripalWrapper_CLI
                 Console.WriteLine(obj.results.text[i]);
             }
             Console.WriteLine(" ");
-            obj = null;
 
             obj = new ScripalWrapper.TFScripal("source", "match find(any (' ', ',','.')); ifMatch end; loop;");
             result = obj.splitFile("test.txt", "testout.txt");
             string f = File.ReadAllText("testout.txt");
             Console.WriteLine("split file result:\n" + f);
-            obj = null;
 
             // file search
             obj = new ScripalWrapper.TFScripal("nearest", "test", 0.5);
@@ -125,7 +116,6 @@ namespace ScripalWrapper_CLI
                 Console.WriteLine(obj.results.fileNames[i] + ",'" + obj.results.text[i] + "'," + obj.results.positions[i] + "," + obj.results.ratings[i]);
             }
             Console.WriteLine(" ");
-            obj = null;
 
             // config
             Console.WriteLine("config as JSON:");
