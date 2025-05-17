@@ -12,14 +12,15 @@ install Git CLI: [https://git-scm.com/downloads/win]([https://git-scm.com/downlo
 
 Scripal application:
 
-in terminal, clone repository:
+in terminal, clone the Scripal repository:
 <pre>
 git clone -b main git@github.com:scripal-git/scripal.git
 </pre>
+Make sure, the system path contains the directory, holding **git.exe**. 
 
 ## Poco C++ libraries (minimum version 1.11.0 required)
 
-in terminal, clone Poco repository:
+in terminal, clone the Poco repository:
 <pre>
 git clone -b master https://github.com/pocoproject/poco.git
 </pre>
@@ -28,8 +29,8 @@ If you are already using Poco, the following libraries are needed:
 
 **PocoFoundation, PocoEncodings, PocoUtil, PocoJSON, PocoXML, PocoZip**
 
-We recommend to build Poco libraries using the supplied Visual Studio solution.<br>
-In the Scripal repository, open **\win\Poco4Scripal.sln** and build the Relase or Debug version. Choose dynamic and static builds.  
+We recommend to build Poco libraries using our supplied Visual Studio solution as part of the Scripal project.<br>
+In the Scripal repository, open **\win\Poco4Scripal.sln** and build the relase or debug version. Choose dynamic and static builds.  
 Scripal runs only on x64 and x86. 
 
 For more information on building Poco, see:
@@ -37,9 +38,8 @@ For more information on building Poco, see:
 
 ## Scripal
 
-To build Scripal, open the Visual Studio solution **\win\scripal.sln**
-
-Select Debug or Release versions and static/dynamic build types.
+To build Scripal, open the Visual Studio solution **\win\scripal.sln**.<br>
+Select debug or release versions and static/dynamic build types.
 
 To tell Scripal about your Poco Build: open Developer Powershell in Visual Studio and execute
 <pre>
