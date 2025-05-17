@@ -37,7 +37,7 @@ For more information on building Poco, see:
 
 ## Scripal
 
-To build Scripal, open **\win\scripal.sln**
+To build Scripal, open the Visual Studio solution **\win\scripal.sln**
 
 Select Debug or Release versions and static/dynamic build types.
 
@@ -47,9 +47,9 @@ To tell Scripal about your Poco Build: open Developer Powershell in Visual Studi
 </pre>
 where XXX_PATH_XXX ist the full path to your Poco folder (see above)
 
-The solution holds 3 projects:
-scripal-cli: build the Scripal console tool scripal.exe in .\x64\Debug\cli and .\x64\Release\cli respectively 
-scripal-dll: build the Scripal DLL in .\x64\Debug\dll and .\x64\Release\dll respectively 
-scripal-lib: build the static library scripal.lib in .\x64\Debug\lib and .\x64\Release\lib respectively 
+The solution holds 3 projects: <br>
+**scripal-cli**: build the Scripal console tool scripal.exe in **.\x64\Debug\cli** and **.\x64\Release\cli** respectively<br> 
+**scripal-dll**: build the Scripal DLL in **.\x64\Debug\dll** and **.\x64\Release\dll** respectively<br> 
+**scripal-lib**: build the static library scripal.lib in **.\x64\Debug\lib** and **.\x64\Release\lib** respectively<br> 
 
 
