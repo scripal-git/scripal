@@ -47,5 +47,9 @@ To tell Scripal about your Poco Build: open Developer Powershell in Visual Studi
 </pre>
 where XXX_PATH_XXX ist the full path to your Poco folder (see above)
 
-The outputs are Scripal.exe (console tool), Scripal.lib and Scripal.dll.
+The solution holds 3 projects:
+scripal-cli: build the Scripal console tool scripal.exe in .\x64\Debug\cli and .\x64\Release\cli respectively 
+scripal-dll: build the Scripal DLL in .\x64\Debug\dll and .\x64\Release\dll respectively 
+scripal-lib: build the static library scripal.lib in .\x64\Debug\lib and .\x64\Release\lib respectively 
+
 
