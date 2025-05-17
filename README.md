@@ -5,11 +5,11 @@
 # $${\color{Teal}Scripal \space text \space processor}$$ 
 
 Scripal is a multipurpose tool which can be used for matching and manipulating text, testing for similarity, or finding patterns in strings and files as well as finding, comparing or converting files.
-It is written in **C++** for best performance and may be used as a console application or library. It is also availabe for **C**, **Python**, **C#**, **Java** and **NodeJs**.
+It is written in **C++** for best performance and may be used as a console application or library. It is also availabe for **C**, **Python**, **C#**, **Java** and **Node.js**.
 
-Scripal is meant to be an alternative to regular expressions but offers more functionality, like finding similar words based on edit distances and file operations, a multi-purpose text processor.<br> 
+Scripal is meant to be an alternative to regular expressions, but offers more functionality, like finding similar words based on edit distances and file operations. It's a multi-purpose text processor.<br> 
 It offers a syntax which is easily readable and resembles more the notation known from programming languages, including constructs like if conditions, operator blocks and loops.<br>
-With it's built-in debugging functionality the internals are easy to understand and flaws in your own code may be found quickly.<br>
+With it's built-in debugging functionality, the internals are easy to understand and flaws in your own code may be found quickly.<br>
 Scripal is for those, who struggle with RegEx's compressed syntax and prefer more readability and intermediate control.<br>
 It gives the user hands-on control over linear execution speed ( O(n) ). Simple text searches are comparable to fast string searches in programming languages.  
 
@@ -30,16 +30,16 @@ use templates for repeating patterns:<br>
 
 ### Scripal's advantages are: 
 
-* **readable:** the pattern (source code) is intuitive, more like a programming language (if.., loops) and allows comments.<br><br>
+* **readable:** The pattern (source code) is intuitive, more like a programming language (if.., loops) and allows comments.<br><br>
 * **fast:** Scripal is very fast for simple searches, which may then be followed by more complex match operations. Strictly O(n), no bitter surprises with large texts.<br><br>
-* **versatile:** works on strings and files in combination with many programming languages, also works as a standalone tool.<br><br>
+* **versatile:** Works on strings and files in combination with many programming languages, also works as a standalone tool.<br><br>
 * **smart:** Scripal can interpret numbers (hex, octal...), number ranges and other lexical elements, no hassling with single digits as in RegEx.<br><br>
-* **functional:** match results may be held in variables (called names) which can be used in further matches and templates work like functions.<br><br> 
-* **similarity:** finds similar words and text (example: nearest distance comparison) and evaluates how different two text blocks are.<br><br> 
-* **comprehendible:** produces debug information during compile- and run time.<br><br>
-* **internationalization:** Scripal takes internationalization seriously and supports most natural languages. (digits in other languages)<br><br>
+* **functional:** Match results may be held in variables (called names) which can be used in further matches and templates work like functions.<br><br> 
+* **similarity:** Finds similar words and text (example: nearest distance comparison) and evaluates how different two text blocks are.<br><br> 
+* **comprehendible:** Produces debug information during compile- and run time.<br><br>
+* **internationalization:** Scripal takes internationalization seriously and supports most natural languages, e.g. digits in other languages<br><br>
 * **deterministic:** Will produce the same replicable result in any programming language on any OS and fully supports UTF-8, -16, -32, Windows code pages and most other popular character encodings.<br><br>
-* **more intuitive and precise than RegEx** ex.: match number in the range 380-1400<br>
+* **more intuitive and precise than RegEx** e.g.: find all numbers in the range 380-1400<br>
  RegEx: &nbsp; **\b(3[8-9][0-9]|[4-9][0-9]{2}|1[0-3][0-9]{2}|1400)\b**<br>
  Scripal: &nbsp; **match find (int[380,1400]); ifMatch end; loop**
 

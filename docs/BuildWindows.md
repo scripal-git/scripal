@@ -12,14 +12,14 @@ install Git CLI: [https://git-scm.com/downloads/win]([https://git-scm.com/downlo
 
 Scripal application:
 
-in terminal:
+in terminal, clone repository:
 <pre>
 git clone -b main git@github.com:scripal-git/scripal.git
 </pre>
 
 ## Poco C++ libraries (minimum version 1.11.0 required)
 
-in terminal:
+in terminal, clone Poco repository:
 <pre>
 git clone -b master https://github.com/pocoproject/poco.git
 </pre>
@@ -28,13 +28,18 @@ If you are already using Poco, the following libraries are needed:
 
 **PocoFoundation, PocoEncodings, PocoUtil, PocoJSON, PocoXML, PocoZip**
 
-We recommend to build Poco libraries using the supplied Visual Studio solution:
-in the Scripal repository, open **\win\Poco4Scripal.sln** and build the relase or debug version
+We recommend to build Poco libraries using the supplied Visual Studio solution.<br>
+In the Scripal repository, open **\win\Poco4Scripal.sln** and build the Relase or Debug version. Choose dynamic and static builds.  
+Scripal runs only on x64 and x86. 
 
-Select Debug or Release versions and static/dynamic build types.
-build Poco - static and dynamic versions are needed (only x64 and x86)
+For more information on building Poco, see:
 [https://docs.pocoproject.org/current/99150-WindowsPlatformNotes.html]
 
+## Scripal
+
+To build Scripal, open **\win\scripal.sln**
+
+Select Debug or Release versions and static/dynamic build types.
 
 To tell Scripal about your Poco Build: open Developer Powershell in Visual Studio and execute
 <pre>
@@ -42,20 +47,5 @@ To tell Scripal about your Poco Build: open Developer Powershell in Visual Studi
 </pre>
 where XXX_PATH_XXX ist the full path to your Poco folder (see above)
 
-You can also build necessary Poco projects with a Visual Studio solution included in the Scripal project.
-Read on for further instructions..
-
-## Scripal
-
-
-To build only Poco projets for Scripal, open **\win\Poco4Scripal.sln**
-
-Select Debug or Release versions and static/dynamic build types.
-
-To build Scripal, open **\win\scripal.sln**
-
-Select Debug or Release versions and static/dynamic build types.
-
-
-
+The outputs are Scripal.exe (console tool), Scripal.lib and Scripal.dll.
 
