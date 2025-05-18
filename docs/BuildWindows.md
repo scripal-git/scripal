@@ -6,7 +6,7 @@ install Visual Studio with C++ support: [https://visualstudio.microsoft.com/down
 
 ## Git
 
-install Git CLI: [https://git-scm.com/downloads/win]([https://git-scm.com/downloads/win)
+install Git CLI: [https://git-scm.com/downloads/win](https://git-scm.com/downloads/win)
 
 ## Prepare Scripal
 
