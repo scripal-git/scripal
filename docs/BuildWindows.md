@@ -49,8 +49,8 @@ To build Scripal, open the Visual Studio solution **\win\scripal.sln**.<br>
 Select debug or release versions and static/dynamic build types.
 
 The solution holds 3 projects: <br>
-**scripal-cli**: build the Scripal console tool scripal.exe in **.\x64\Debug\cli** and **.\x64\Release\cli** respectively<br> 
-**scripal-dll**: build the Scripal DLL in **.\x64\Debug\dll** and **.\x64\Release\dll** respectively<br> 
-**scripal-lib**: build the static library scripal.lib in **.\x64\Debug\lib** and **.\x64\Release\lib** respectively<br> 
+**scripal-cli**: build the Scripal console tool scripal.exe in **\x64\Debug\cli** and **\x64\Release\cli** respectively<br> 
+**scripal-dll**: build the Scripal DLL in **\x64\Debug\dll** and **\x64\Release\dll** respectively<br> 
+**scripal-lib**: build the static library scripal.lib in **\x64\Debug\lib** and **\x64\Release\lib** respectively<br> 
 
 
