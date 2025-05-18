@@ -25,7 +25,6 @@ zip file has the structure<br>
 *   scripal.dll<br>
 *   scripal.lib<br>
 *   scripal.exe<br>
-*   wrapper/ .. language wrappers<br>
 
 Copy scripal.lib, scripal.dll and the binary to your preferred location. Remember the path to specify in language wrappers.
 Example **baseInit("pathToDLL")**  
