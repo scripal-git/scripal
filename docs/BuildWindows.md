@@ -2,7 +2,7 @@
 
 ## toolchain essentials 
 
-install Visual Studio with C++ support: <https://visualstudio.microsoft.com/downloads/>
+install Visual Studio with C++ support: [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
 
 ## Git
 
@@ -33,7 +33,7 @@ We recommend to build Poco libraries using our supplied Visual Studio solution a
 (see below)
 
 For more information on building Poco, see:
-[https://docs.pocoproject.org/current/99150-WindowsPlatformNotes.html]
+[https://docs.pocoproject.org/current/99150-WindowsPlatformNotes.html](https://docs.pocoproject.org/current/99150-WindowsPlatformNotes.html)
 
 ## Scripal
 To create Poco for Scripal, first set the environment variable POCO_BASE with the full path to your Poco folder (see above)
