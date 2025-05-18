@@ -30,22 +30,23 @@ If you are already using Poco, the following libraries are needed:
 **PocoFoundation, PocoEncodings, PocoUtil, PocoJSON, PocoXML, PocoZip**
 
 We recommend to build Poco libraries using our supplied Visual Studio solution as part of the Scripal project.<br>
-In the Scripal repository, open **\win\Poco4Scripal.sln** and build the relase or debug version. Choose dynamic and static builds.  
-Scripal runs only on x64 and x86. 
+(see below)
 
 For more information on building Poco, see:
 [https://docs.pocoproject.org/current/99150-WindowsPlatformNotes.html]
 
 ## Scripal
+To create Poco for Scripal, first set the environment variable POCO_BASE with the full path to your Poco folder (see above)
+e.g.
+<pre>
+[Environment]::SetEnvironmentVariable(“POCO_BASE”, “XXX_PATH_XXX”, “User”)
+</pre>
+
+Then open the solution **win\Poco4Scripal.sln** in the Scripal repository and create the release or debug version. Select dynamic and static builds.  
+Scripal only runs on x64 and x86. 
 
 To build Scripal, open the Visual Studio solution **\win\scripal.sln**.<br>
 Select debug or release versions and static/dynamic build types.
-
-To tell Scripal about your Poco Build: open Developer Powershell in Visual Studio and execute
-<pre>
-[Environment]::SetEnvironmentVariable("POCO_BASE", "XXX_PATH_XXX", "User")
-</pre>
-where XXX_PATH_XXX ist the full path to your Poco folder (see above)
 
 The solution holds 3 projects: <br>
 **scripal-cli**: build the Scripal console tool scripal.exe in **.\x64\Debug\cli** and **.\x64\Release\cli** respectively<br> 
