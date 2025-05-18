@@ -15,9 +15,9 @@
 
 ### C# module
 
-To use Scripal with C# you need the C/C++ scripal.dll and a C# wrapper for it.
-The Scripal repository contains the solution \scripal\wrapper\cs\ScripalWrapper.sln with the C# wrapper and an example project.
-The ScripalWrapper.csproj project must be referenced in your own C# project and scripal.dll must be located in the execution directory.
+To use Scripal with C# you need the C/C++ scripal.dll and the C# wrapper for it.<br>
+The Scripal repository contains the solution **\scripal\wrapper\cs\ScripalWrapper.sln** with the C# wrapper and an example project.<br>
+The **ScripalWrapper.csproj** project must be referenced in your own C# project and **scripal.dll** must be located in the execution directory.
  
 ## run C# test program scripal
 
@@ -42,7 +42,7 @@ Console.ReadKey();
 </pre>
 
 
-For more information see [matching with Scripal](/docs/IntroMatching.md) <br>
+For more information see [matching with Scripal](/docs/IntroMatching.md) and [library](/docs/LibraryBase.md) <br>
 
 
 
