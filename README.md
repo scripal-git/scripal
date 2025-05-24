@@ -140,4 +140,4 @@ see: [https://pocoproject.org/](https://pocoproject.org/) or [https://github.com
 ## Contact
 
 For error reports or any feature requests, please use [Github issues](https://github.com/scripal-git/scripal/issues).
-Only Emails written in English will be considered!  
+Only messages written in English will be considered!  
