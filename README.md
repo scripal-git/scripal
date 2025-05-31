@@ -2,7 +2,7 @@
 <img align="right" width="150" src="./docs/internal/Logo.png">
 <br><br>
 
-# $${\color{Teal}Scripal \space text \space processor}$$ 
+# Scripal text processor
 
 Scripal is a multipurpose tool which can be used for matching and manipulating text, testing for similarity, or finding patterns in strings and files as well as finding, comparing or converting files.
 It is written in **C++** for best performance and may be used as a console application or library. It is also availabe for **C**, **Python**, **C#**, **Java** and **Node.js**.
