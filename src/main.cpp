@@ -543,8 +543,8 @@ const std::string setOpt(std::map<TFOption*, std::string>& aOpts) {
 // print program usage 
 // ****************************************************************************
 void printUsage() {
-  output("scripal: [options] [source] [text]\n\n"
-               "\t-?                           : show usage and end\n" 
+  output("scripal (VERSION " + VERSION + "): [options] [source] [text]\n\n"
+               "\t-?                           : show version, usage and end\n" 
                "\t-a path (--sourcefile=path)  : path to file holding source, may hold encoding e.g. utf8//path \n" 
                "\t-b path (--textfile=path)    : path to file holding text, may hold encoding e.g. utf8//path\n" 
                "\t-c path (--config=path)      : use alternative config file, create if missing\n" 

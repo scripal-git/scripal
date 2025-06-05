@@ -16,8 +16,10 @@ namespace Scripal {
 // ****************************************************************************
 void unitTestLib() {
   output("library test: does type and encoding conversion work?\n\n");
-  output("UTF16 match should return 'test16' \n");
+  output("UTF16 match should return 'test16', output debug info \n");
+  bool debugRun = config.debugRun;
 
+  config.debugRun = true;
   std::u16string source16 = u"match find ('test16')";
   TFScripal* obj = new TFScripal(conv(source16));
 
@@ -27,6 +29,7 @@ void unitTestLib() {
   else
     output("no UTF16 match\n\n");
  
+  config.debugRun = debugRun;
   delete obj;
   
   // *************************************************

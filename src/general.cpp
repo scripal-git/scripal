@@ -731,6 +731,7 @@ std::string examplesToJSON(const std::vector<TFExmpl> aExamples, int aEncoding) 
   Poco::JSON::Array::Ptr  array = new Poco::JSON::Array();
   const std::string nameId = "task:";
   const std::string descriptionId = "how:";
+  std::size_t counter = 0;
 
   for (std::size_t index = 0; index < aExamples.size(); ++ index) {
     if (aExamples[index].text.size() > 10000)
@@ -740,7 +741,7 @@ std::string examplesToJSON(const std::vector<TFExmpl> aExamples, int aEncoding) 
     std::string explain = aExamples[index].explain;
 
     // set counter
-    inner->set("counter",  index);
+    inner->set("counter",  counter);
 
     // set name
     std::string part = aExamples[index].explain.substr(0, aExamples[index].explain.find(descriptionId));
@@ -758,6 +759,7 @@ std::string examplesToJSON(const std::vector<TFExmpl> aExamples, int aEncoding) 
     // set text
     inner->set("text", aExamples[index].text);
     array->add(inner);
+    ++counter;
   }
   cJSON->set("examples", array);
  

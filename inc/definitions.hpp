@@ -71,8 +71,9 @@
 namespace Scripal {
   
 // library version
-const std::string VERSION  = "1.0.1";
-// first release , V_1.0.1
+const std::string VERSION  = "1.0.2";
+// V_1.0.2
+// output version number
 
 //  temporary files 
 #ifdef LINUX
