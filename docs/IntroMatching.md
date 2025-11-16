@@ -90,9 +90,9 @@ will match the entire next word starting with the letter 'c'<br><br>
 or easier:
 <pre>match find ( bow 'c' find (eow) ); end;</pre>  
 
-and equivalent, find word starting with 'c' and all following letters:
+and equivalent, find first word starting with 'c':
 
-<pre>match find ( bow 'c' repeat (letter)); end;</pre>  
+<pre>match find ( bow 'c' find (eow) )); end;</pre>  
  
 and equivalent, find word starting with 'c' and all characters but not end of word , i.e. not last character in word. Then add last character of word:
      
