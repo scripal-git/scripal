@@ -83,18 +83,14 @@ block operators are for example:<br>
 ..
 
 <pre>match find ( bow 'c' );</pre>  
-will advance to the next word starting with the letter 'c'
+will advance to the next word starting with the letter 'c' (bow = begin of word)
 
 <pre>match find ( bow 'c'); match find (eow); end;</pre>  
 will match the entire next word starting with the letter 'c'<br><br>
 or easier:
 <pre>match find ( bow 'c' find (eow) ); end;</pre>  
 
-and equivalent, find first word starting with 'c':
-
-<pre>match find ( bow 'c' find (eow) )); end;</pre>  
- 
-and equivalent, find word starting with 'c' and all characters but not end of word , i.e. not last character in word. Then add last character of word:
+or equivalent to show Scripal´s functionality, find word starting with 'c' and all characters but not end of word , i.e. not last character in word. Then add last character of word:
      
 <pre>match find ( bow 'c' repeat (char !eow) char); end;</pre>
     

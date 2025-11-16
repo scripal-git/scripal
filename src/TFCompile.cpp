@@ -459,6 +459,20 @@ void TFCompile::closeOperand() {
   // ******************** 
   // integrity check  
   if (curOpd->opdtype == SP_OPD_LOGICAL) {
+    if (curOpd->codeID == SP_LOGIC_REPEAT) {
+      // if no range given for repeat operand -> set default [0, INFINITE]
+      if ( (std::isnan(curOpd->attrValues[0])) && (std::isnan(curOpd->attrValues[1]))) {
+        std::array<TFNum,2> values = {0, INFINTE_VALUE};
+        curOpd->attrValues = values;
+      }
+    }
+    if (curOpd->codeID == SP_LOGIC_FINDAT) {
+      // if no range given for findat operand -> set default [0, INFINITE]
+      if ( (std::isnan(curOpd->attrValues[0])) && (std::isnan(curOpd->attrValues[1]))) {
+        std::array<TFNum,2> values = {0, INFINTE_VALUE};
+        curOpd->attrValues = values;
+      }
+    }
   }
 
   operandOpen = false;
