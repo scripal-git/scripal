@@ -48,7 +48,7 @@ You may download the Scripal modules for programming languages here:
 [https://scripal.org/downloads/wrapper/python/scripalPython.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
 
 ### JavaScript (Node.js) language
-[https://scripal.org/downloads/wrapper/js/scripalJS.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
+[https://scripal.org/downloads/wrapper/js/scripalJS.zip](https://scripal.org/downloads/wrapper/js/scripalJS.zip)
 
 ### Java language
-[https://scripal.org/downloads/wrapper/java/scripalJava.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
+[https://scripal.org/downloads/wrapper/java/scripalJava.zip](https://scripal.org/downloads/wrapper/java/scripalJava.zip)
