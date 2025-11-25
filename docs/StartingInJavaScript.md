@@ -32,7 +32,7 @@ npm install @makeomatic/ffi-napi
 These modules must be available.
 The JavaScript module is [scripal.js](/wrapper/js/scripal.js). It consists of only one file. <br>
 See how to use Scripal in JavaScript [test.js](/wrapper/js/test.js) <br>
-Make sure to specify the correct path to the Scripal shared library when calling **scripal.baseInit(path)**. This must be a path to the folder holding libscripal.so oder scripal.dll.
+Make sure to specify the correct path to the Scripal shared library when calling **scripal.baseInit(path)**. This must be a path to the folder holding libscripal.so or scripal.dll.
 The function must be called once to initialize the library. <br>
 Every single thread must call **scripal.libInit(config, encoding)** to specify the entire path to the config file used (leave empty for default) and the encodig of the OS environment. **scripal.ENC_DEFAULT** will denote the standard.  
 
