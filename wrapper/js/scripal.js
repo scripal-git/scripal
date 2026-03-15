@@ -72,14 +72,39 @@ const POS_COUNT         = 3;
 const NO_POS = -1;
 const NO_VALUE = -2;
 
+function findNodeModulesPath(startPath = __dirname) {
+    let currentPath = path.resolve(startPath);
+
+    while (true) {
+        const potentialPath = path.join(currentPath, 'node_modules');
+        
+        if (fs.existsSync(potentialPath) && fs.lstatSync(potentialPath).isDirectory()) {
+            return potentialPath;
+        }
+
+        const parentPath = path.dirname(currentPath);
+        
+        if (parentPath === currentPath) {
+            break;
+        }
+        
+        currentPath = parentPath;
+    }
+
+    return null;
+}
+
 function baseInit(libPath = "") {
   // global variables
   // Scripal wrapper for JavaScript
   if (process.platform === "linux") {
     if (libPath === "") {
-      libPath = "/usr/lib/scripal/libscripal.so";
-      if (!fs.existsSync(libPath))
-        libPath = "/usr/lib64/scripal/libscripal.so";
+      libPath = findNodeModulesPath() +"/scripal/libscripal.so";
+      if (!fs.existsSync(libPath)) {
+        libPath = "/usr/lib/scripal/libscripal.so";
+        if (!fs.existsSync(libPath))
+          libPath = "/usr/lib64/scripal/libscripal.so";
+      }  
     }
     scripalLib = ffi.Library(libPath, {
       "printText": ["void", ["string", "int", "int"]],

@@ -71,9 +71,9 @@
 namespace Scripal {
   
 // library version
-const std::string VERSION  = "1.0.3";
-// V_1.0.3
-// fixed repeat and findat operands: no default range if none specified
+const std::string VERSION  = "1.0.4";
+// V_1.0.4
+// node JS package
 
 //  temporary files 
 #ifdef LINUX
