@@ -71,7 +71,7 @@ static std::vector<TFExmpl> userExamples = {
 { "task: match hex number in the range 0001-ff00\n"
   "how:  specify hex attribute and number range",
   
-  "match ( hex [1,ff00] )",
+  "match ( pure hex [1,ff00] )",
   
   "fe78",
 
@@ -598,7 +598,7 @@ static std::vector<TFExmpl> userExamples = {
   "matchEnd find( pure[0,255] '.' pure[0,255] '.' pure[0,255] '.' pure[0,255] ) \n"
   "loop",
 
-  ", 128.0.1.1, 45.6.7.9, 255.255.255.0 and 0.0.0.0, but not 1234.5.7.4, 66.89.56.2222 or 257.45.232.4",
+  "128.0.1.1, 45.6.7.9, 255.255.255.0 and 0.0.0.0, but not 1234.5.7.4, 66.89.56.2222 or 257.45.232.4",
 
   {"128.0.1.1", "45.6.7.9", "255.255.255.0", "0.0.0.0"}
 } ,

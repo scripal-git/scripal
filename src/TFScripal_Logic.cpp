@@ -574,7 +574,12 @@ isInline void TFScripal::matchText(TFOperand& aOpd) {
 // aOpd -operand to match
 // ****************************************************************************
 isInline void TFScripal::matchNumbers(TFOperand& aOpd)  {
-   std::size_t curBegin, curEnd;
+  std::size_t curBegin, curEnd;
+  
+  if (posPtr == nPos) {
+    // if position is nPos no sense to match
+    return;
+  }
 
   // find start of number
   curBegin = posPtr; 

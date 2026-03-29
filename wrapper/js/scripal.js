@@ -164,7 +164,9 @@ function baseInit(libPath = "") {
 
   if (process.platform === "win32") {
     if (libPath === "") {
-      libPath = process.cwd();
+      libPath = "..\\..\\win\\x64\\Release\\dll";  
+      if (!fs.existsSync(libPath))       
+        libPath = process.cwd();
     }
     // os.add_dll_directory equivalent: modify PATH environment variable
     process.env.PATH = libPath + ";" + process.env.PATH;

@@ -71,7 +71,7 @@
 namespace Scripal {
   
 // library version
-const std::string VERSION  = "1.0.4";
+const std::string VERSION  = "1.0.5";
 // V_1.0.4
 // node JS package
 

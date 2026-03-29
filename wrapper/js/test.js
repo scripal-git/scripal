@@ -11,14 +11,14 @@ const fs = require('fs');
 // init functions
 let lpath = "";
 if (process.platform === "linux") {
-  lpath = "";
   global.scripal = require('./scripal');
 }
 
 if (process.platform === "win32") {  
-  lpath = "..\\..\\win\\x64\\Release\\dll";
   global.scripal = require('.\\scripal');
 }
+
+// set path to library or leave as "" for default 
 scripal.baseInit(lpath);
 scripal.libInit("", scripal.ENC_UTF8);
 scripal.logInit("buffer");
