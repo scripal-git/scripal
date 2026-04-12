@@ -18,14 +18,17 @@ if ! [ -f "./win/scripal.exe" ]; then
   exit 1
 fi
 
+rm -f ./win/scripalWin.zip
 cp -fr ../../scripal/test ./win
 rm -fr ./win/inc
 cp -fr ../../scripal/inc ./win
 cd win
 zip -r ../scripalWin.zip .
+tar -xf ../scripal-dll-win32-x64.tar.xz scripal.dll
 cd ..
 rm -fr ./win/*
 mv scripalWin.zip ./win
+mv scripal-dll-win32-x64.tar.xz ./win
 
 rm -rf wrapper
 cp -r ../../scripal/wrapper wrapper
