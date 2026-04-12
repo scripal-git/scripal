@@ -18,13 +18,23 @@ if ! [ -f "./win/scripal.exe" ]; then
   exit 1
 fi
 
+if ! [ -f "./linux/libscripal.so" ]; then
+  echo "cannot cd into directory downloads or Linux libscripal.so not present"
+  exit 1
+fi
+cd linux
+rm -f scripal-so-linux-x64.tar.xz
+tar -cJf scripal-so-linux-x64.tar.xz  libscripal.so
+cd ..
+
 rm -f ./win/scripalWin.zip
+rm -f ./win/scripal-dll-win32-x64.tar.xz
 cp -fr ../../scripal/test ./win
 rm -fr ./win/inc
 cp -fr ../../scripal/inc ./win
 cd win
 zip -r ../scripalWin.zip .
-tar -xf ../scripal-dll-win32-x64.tar.xz scripal.dll
+tar -cJf ../scripal-dll-win32-x64.tar.xz scripal.dll
 cd ..
 rm -fr ./win/*
 mv scripalWin.zip ./win
