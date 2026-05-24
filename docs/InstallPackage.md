@@ -36,19 +36,20 @@ To build Scripal on Linux systems, you may call [https://scripal.org/downloads/l
 You may download the Scripal modules for programming languages here:
 
 ### C language
-[https://scripal.org/downloads/wrapper/c/scripalC.zip](https://scripal.org/downloads/wrapper/c/scripalC.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC.zip]
 
 ### C++ language
-[https://scripal.org/downloads/wrapper/c++/scripalC++.zip](https://scripal.org/downloads/wrapper/c%2B%2B/scripalC%2B%2B.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC++.zip]
 
 ### C# language (Windows only)
-[https://scripal.org/downloads/wrapper/cs/scripalCS.zip](https://scripal.org/downloads/wrapper/cs/scripalCS.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalCS.zip]
 
 ### Python3 language
-[https://scripal.org/downloads/wrapper/python/scripalPython.zip](https://scripal.org/downloads/wrapper/python/scripalPython.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalPython.zip]
 
 ### JavaScript (Node.js) language
-[https://scripal.org/downloads/wrapper/js/scripalJS.zip](https://scripal.org/downloads/wrapper/js/scripalJS.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJS.zip]
 
 ### Java language
-[https://scripal.org/downloads/wrapper/java/scripalJava.zip](https://scripal.org/downloads/wrapper/java/scripalJava.zip)
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJava.zip]
+
