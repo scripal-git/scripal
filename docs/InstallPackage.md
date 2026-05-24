@@ -3,7 +3,7 @@
 ## packages
 
 ### Ubuntu (AMD64, lastest versions)
-install deb package:  [https://scripal.org/downloads/linux/scripal.ubuntu_amd64.deb](https://scripal.org/downloads/linux/scripal.ubuntu_amd64.deb) <br>
+install deb package:  [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb) <br>
 headers will be under **/usr/include/scripal**, binary in **/usr/bin**, libs and others in **/usr/lib/scripal**<br>
 the config file is created in **~/.config/scripal** on first startup of program or library 
 
