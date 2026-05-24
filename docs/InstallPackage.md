@@ -30,26 +30,26 @@ Copy scripal.lib, scripal.dll and the binary to your preferred location. Remembe
 Example **baseInit("pathToDLL")**  
 
 ## Linux build script
-To build Scripal on Linux systems, you may call [https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) 
+To build Scripal on Linux systems, you may call [https://scripal.org/downloads/linux/buildLinux.sh][https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) 
 
 ## language support
 You may download the Scripal modules for programming languages here:
 
 ### C language
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC.zip)
 
 ### C++ language
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC++.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC++.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalC++.zip)
 
 ### C# language (Windows only)
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalCS.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalCS.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalCS.zip)
 
 ### Python3 language
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalPython.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalPython.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalPython.zip)
 
 ### JavaScript (Node.js) language
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJS.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJS.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJS.zip)
 
 ### Java language
-[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJava.zip]
+[https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJava.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalJava.zip)
 
