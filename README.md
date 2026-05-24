@@ -6,7 +6,6 @@
 
 Scripal is a multipurpose tool which can be used for matching and manipulating text, testing for similarity, or finding patterns in strings and files as well as finding, comparing or converting files.
 It is written in **C++** for best performance and may be used as a console application or library. It is also availabe for **C**, **Python**, **C#**, **Java** and **Node.js**.<br> 
-Please try out on: [https://scripal.org/](https://scripal.org/) 
 
 Scripal is meant to be an alternative to regular expressions, but offers more functionality, like finding similar words based on edit distances and file operations. It's a multi-purpose text processor.<br> 
 It offers a syntax which is easily readable and resembles more the notation known from programming languages, including constructs like if conditions, operator blocks and loops.<br>
