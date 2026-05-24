@@ -30,7 +30,7 @@ Copy scripal.lib, scripal.dll and the binary to your preferred location. Remembe
 Example **baseInit("pathToDLL")**  
 
 ## Linux build script
-To build Scripal on Linux systems, you may call [https://scripal.org/downloads/linux/buildLinux.sh][https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) 
+To build Scripal on Linux systems, you may call [https://github.com/scripal-git/scripal/blob/main/ship/buildLinux.sh](https://github.com/scripal-git/scripal/blob/main/ship/buildLinux.sh) 
 
 ## language support
 You may download the Scripal modules for programming languages here:
