@@ -21,7 +21,7 @@ or use package 'cmake' of your Linux distro
 ## build script 
 
 to install Poco libraries and Scripal you may call the bash script **buildLinux.sh**<br>
-download script from: [https://scripal.org/downloads/linux/buildLinux.sh](https://scripal.org/downloads/linux/buildLinux.sh) <br>
+download script from: [[https://scripal.org/downloads/linux/buildLinux.sh](https://github.com/scripal-git/scripal/blob/main/ship/buildLinux.sh)](https://github.com/scripal-git/scripal/blob/main/ship/buildLinux.sh) <br>
 
 copy **buildLinux.sh** into the directory where Scripal and Poco libraries should be installed (recommendation: '/opt') and execute<br>
 
