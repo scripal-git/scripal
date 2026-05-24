@@ -3,22 +3,22 @@
 ## packages
 
 ### Ubuntu (AMD64, lastest versions)
-install deb package:  [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb) <br>
+install deb package:  [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.ubuntu_1.0.5_amd64.deb](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.ubuntu_1.0.5_amd64.deb) <br>
 headers will be under **/usr/include/scripal**, binary in **/usr/bin**, libs and others in **/usr/lib/scripal**<br>
 the config file is created in **~/.config/scripal** on first startup of program or library 
 
 ### Debian (AMD64, lastest versions)
-install deb package:  [https://scripal.org/downloads/linux/scripal.debian_amd64.deb](https://scripal.org/downloads/linux/scripal.debian_amd64.deb) <br>
+install deb package:  [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.debian_1.0.5_amd64.deb) <br>
 headers will be under **/usr/include/scripal**, binary in **/usr/bin**, libs and others in **/usr/lib/scripal**<br>
 the config file is created in **~/.config/scripal** on first startup of program or library 
 
 ### Fedora (AMD64, lastest versions)
-install deb package:  [https://scripal.org/downloads/linux/scripal.fedora_amd64.rpm](https://scripal.org/downloads/linux/scripal.fedora_amd64.rpm) <br>
+install deb package:  [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.fedora.1.0.5.x84_64.rpm](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripal.fedora.1.0.5.x84_64.rpm) <br>
 headers will be under **/usr/include/scripal**, binary in **/usr/bin**, libs and others in **/usr/lib64/scripal**<br>
 the config file is created in **~/.config/scripal** on first startup of program or library 
 
 ### MS Windows 10 + 11, 64 bit
-download zip: [https://scripal.org/downloads/win/scripalWin.zip](https://scripal.org/downloads/win/scripalWin.zip) <br>
+download zip: [https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalWin.zip](https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/scripalWin.zip) <br>
 install in preferred location<br>
 zip file has the structure<br>
 * inc/ .. header files<br>
