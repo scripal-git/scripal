@@ -6,57 +6,49 @@ Using other encodings causes some performance overhead.
 
 ## Installation
 
-[prerequisites](/docs/InstallPrerequisites.md) <br>
+<pre>
+npm install scripal
+</pre>
 
-### ready to use packages and module
+Scripal relies on **@makeomatic/ffi-napi**, which requires modules **nan** and **ref-napi** <br>
+Now start to write your first code.
+
+## Additional installation of full scripal package with command line tool 
+
+[prerequisites](/docs/InstallPrerequisites.md) <br>
 
 [install packages](/docs/InstallPackage.md) <br>
 
-### JavaScript module
-Scripal relies on ffi-napi, which requires modules nan and ref-napi <br>
+## getting started
 
-<pre>
-npm install nan
-npm install ref-napi
-</pre>
-
-Install FFI package:
-
-[https://www.npmjs.com/package/@makeomatic/ffi-napi](https://www.npmjs.com/package/@makeomatic/ffi-napi)
-
-<pre>
-npm install @makeomatic/ffi-napi
-</pre>
-
-
-These modules must be available.
 The JavaScript module is [scripal.js](/wrapper/js/scripal.js). It consists of only one file. <br>
 See how to use Scripal in JavaScript [test.js](/wrapper/js/test.js) <br>
-Make sure to specify the correct path to the Scripal shared library when calling **scripal.baseInit(path)**. This must be a path to the folder holding libscripal.so or scripal.dll.
-The function must be called once to initialize the library. <br>
+
+The function  **scripal.baseInit(path)** must be called once to initialize the library. <br>
 Every single thread must call **scripal.libInit(config, encoding)** to specify the entire path to the config file used (leave empty for default) and the encodig of the OS environment. **scripal.ENC_DEFAULT** will denote the standard.  
 
 ## run Node.js test program 
-<pre>
-"use strict";
 
+<pre>
 const os = require('os');
 const fs = require('fs');
+
+// ffi-napi must be installed
 
 // init functions
 let lpath = "";
 if (process.platform === "linux") {
-  lpath = "";
   global.scripal = require('./scripal');
 }
 
 if (process.platform === "win32") {  
-  lpath = "..\\..\\win\\x64\\Debug";
   global.scripal = require('.\\scripal');
 }
+
+// set path to library or leave as "" for default 
 scripal.baseInit(lpath);
 scripal.libInit("", scripal.ENC_UTF8);
-scripal.logInit("stdout");
+scripal.logInit("buffer");
 
 let obj = new scripal.TFScripal("source", "match find(bow 'a'); ifMatch matchEnd find(eow); loop;");
 
