@@ -8,7 +8,7 @@ const { execSync, spawnSync } = require('child_process');
 const https = require('https');
 
 const INSTALL_DIR = __dirname;
-const GITHUB_BASE = 'https://github.com/scripal-git/scripal/releases/download/Scripal-NPM-1.0.5';
+const GITHUB_BASE = 'https://github.com/scripal-git/scripal/releases/download/Scripal-1.0.5/';
 
 const PLATFORM_CONFIG = {
   linux: {

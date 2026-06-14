@@ -1,15 +1,15 @@
 # scripal
 
 Scripal is a universal tool to find, match or manipulate text and numbers in strings and files. 
-Find numbers and number ranges easily in strings or files. Valid and extract numbers. 
+Find numbers and number ranges easily in strings or files. Validate and extract numbers. 
 
-It's written in C++ for optimal performance, and is available for many languages, including Node.js. 
-Scripal also comes as a stand-alone tool to be used in a terminal.
+It's written in C++ for optimal performance and is available for many languages, including Node.js. 
+Scripal also comes as a stand-alone tool to be used in a terminal or shell.
 The tool is meant to be an alternative to regular expressions, but offers more functionality, like finding similar words based on edit distances and file operations. 
 It's a multi-purpose text processor.
 
 You can find numbers and number ranges easily, also embedded in IDs, dates etc.
-No more hassling with non-intuitive RegEx Phrases.
+No more hassling with non-intuitive RegEx phrases.
 Find embedded numbers, as in ID45ctx or pure, isolated numbers using the keyword "pure".
 run **node testnum.js** for examples. 
 'testnum.js' is stored in your **node_modules/scripal** folder.
@@ -35,7 +35,9 @@ scripal.setEncoding(scripal.ENC_UTF8);
 let obj = new scripal.TFScripal("source", "match find( pure hex [1,ff00] )");
 
 let result = obj.match("Look for number 0x01e6 but not 0x12ffe.");
-showResult();
+
+console.log("source match result: ", result , " , no. of results: " , obj.getResultSize());
+console.log(obj.results.text[0], obj.results.positions[0]);
 ```
 
 ## Tryout
@@ -105,22 +107,24 @@ matchEnd find( int[100,200] ); loop
 
 -----------------------------------------------------
 
-JS example, search in file testnum.js:
+JS example, search in file **testnum.js**, run in folder containing **testnums.js**:
 
 ```JS
+global.scripal = require('scripal');
+scripal.baseInit("");
+scripal.setEncoding(scripal.ENC_UTF8);
+
 let obj = new scripal.TFScripal("source", "matchEnd find( int[100,200] ); loop");
 result = obj.matchFile("testnum.js");
-showResult();
 
-get results in many formats, from CSV to simple human readable format
-
-console.log(obj.getResultCSV());
-console.log(obj.getResultJSON()
-console.log(obj.getResultHRF())
+ console.log("source match result: ", result , " , no. of results: " , obj.getResultSize());
+ for (let i = 0; i < obj.results.size(); i++) {
+  console.log(obj.results.text[i], obj.results.positions[i]);
+ };
 ```
 
 
-Get started immediately, don't ruin your nerves with RegEx phrases. Have fun. 
+Get started immediately, don't lose your nerve with RegEx phrases. Have fun. 
 
 ## Installation
 
@@ -141,7 +145,7 @@ During install, the postinstall script (`install.js`) automatically:
 
 ## Running tests
 
-Files test.js and testnum.js are in scripal module folder.
+Files **test.js** and **testnum.js** are in scripal module folder.
 
 ```
 node test.js
